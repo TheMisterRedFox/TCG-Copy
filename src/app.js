@@ -4,8 +4,8 @@ import { Card } from './entities/card.js';
 // rareté 1 : Peu commun: 20%
 // rareté 2 : Rare: 5%
 // rareté 3 : Très rare : 2%
-// rareté 4 : Légendaire : 0.5%
-// rareté 5 : Shrek : 0.01%
+// rareté 4 : Légendaire : 0.4%
+// rareté 5 : Shrek : 0.1%
 
 let pokemonCards = [];
 
@@ -39,10 +39,10 @@ function generateCard() {
 		case rarityRoll < 97.5:
 			rarity = 2; // Rare
 			break;
-		case rarityRoll < 99.5:
+		case rarityRoll < 99.6:
 			rarity = 3; // Très rare
 			break;
-		case rarityRoll < 99.99:
+		case rarityRoll < 99.9:
 			rarity = 4; // Légendaire
 			break;
 		default:
