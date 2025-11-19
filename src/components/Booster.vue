@@ -123,7 +123,11 @@ function cutBooster() {
 				v-for="(item, index) in generatedCards"
 				:key="index"
 				class="card"
-				:class="{ clicked: item.clicked }"
+				:class="[
+					item.clicked ? 'clicked' : '',
+					item.card ? `rarity-${item.card.rarity}` : '',
+					item.card ? `type-${item.data.types[0].type.name}` : '',
+				]"
 				@click="item.clicked = true"
 			>
 				<!-- Header -->
