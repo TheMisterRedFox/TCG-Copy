@@ -187,27 +187,69 @@ function generateCard() {
     return filteredCards[randomIndex];
 }
 
-function generateRandomCards() {
+async function generateRandomCards() {
     const cardsContainer = document.querySelector('.cards-container');
     cardsContainer.innerHTML = ''; // Vider le conteneur avant d'ajouter de nouvelles cartes
 
     const cards = [];
 
-    while (cards.length < 10) {
+    while (cards.length < 5) {
         const newCard = generateCard();
         cards.push(newCard);
     }
 
-    // Créer des éléments HTML pour chaque carte et les ajouter au conteneur
-    cards.forEach(card => {
+    // Créer des éléments HTML pour chaque carte et récupérer les infos via l'API
+    for (const card of cards) {
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
         cardElement.innerHTML = `
-            <p>Nom : ${card.name}</p>
-            <p>Rareté : ${getRarityName(card.rarity)}</p>
+            <div class="card-header">
+                <p class="card-name">${card.name}</p>
+            </div>
+            <div class="card-illustration">Chargement...</div>
+            <div class="card-body">
+                <p>Rareté : ${getRarityName(card.rarity)}</p>
+            </div>
         `;
+
+        cardElement.addEventListener('click', () => { 
+            cardElement.classList.add("clicked");
+        });
+
+        // Ajouter la carte au conteneur avant de récupérer les données
         cardsContainer.appendChild(cardElement);
-    });
+
+        try {
+            // Récupérer les données du Pokémon via l'API
+            const pokemonData = await fetchPokemonData(card.id);
+
+            // Mettre à jour la carte avec les informations récupérées
+            const illustration = cardElement.querySelector('.card-illustration');
+            illustration.innerHTML = `
+                <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}" />
+            `;
+
+            const body = cardElement.querySelector('.card-body');
+            body.innerHTML += `
+                <p>Type : ${pokemonData.types.map(type => type.type.name).join(', ')}</p>
+                <p>Poids : ${pokemonData.weight / 10} kg</p>
+                <p>Taille : ${pokemonData.height / 10} m</p>
+            `;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des données du Pokémon :', error);
+            const illustration = cardElement.querySelector('.card-illustration');
+            illustration.innerHTML = `<p>Erreur de chargement</p>`;
+        }
+    }
+}
+
+// Fonction pour récupérer les données du Pokémon depuis l'API PokéAPI
+async function fetchPokemonData(pokemonId) {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP ! statut : ${response.status}`);
+    }
+    return response.json();
 }
 
 function getRarityName(rarity) {
