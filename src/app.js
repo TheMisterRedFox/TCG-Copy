@@ -229,7 +229,7 @@ async function generateRandomCards() {
 
 			// Mettre à jour la carte avec les informations récupérées
 			const illustration = cardElement.querySelector('.card-illustration');
-            illustration.innerHTML = `
+			illustration.innerHTML = `
                 <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${card.id.toString().padStart(3, '0')}.png" alt="${pokemonData.name}" />
             `;
 
