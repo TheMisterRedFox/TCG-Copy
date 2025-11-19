@@ -14,11 +14,10 @@ const cutted = ref(false);
 // ---------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const getRandomInt = (min, max) =>
+	Math.floor(Math.random() * (max - min + 1)) + min;
 
-function getRarityName(rarity) {
+const getRarityName = (rarity) => {
 	switch (rarity) {
 		case 0:
 			return 'Common';
@@ -33,9 +32,9 @@ function getRarityName(rarity) {
 		default:
 			return 'Shrek';
 	}
-}
+};
 
-function pickRandomCard() {
+const pickRandomCard = () => {
 	const roll = Math.random() * 100;
 	let rarity;
 
@@ -48,16 +47,17 @@ function pickRandomCard() {
 
 	const list = pokemonCards.filter((c) => c.rarity === rarity);
 	return list[getRandomInt(0, list.length - 1)];
-}
+};
 
 // ---------------------------------------------------------------
 // API fetch (PokéAPI or custom for Shrek)
 // ---------------------------------------------------------------
-async function fetchPokemonData(id) {
+const fetchPokemonData = async (id) => {
 	if (id === 0) {
 		return {
 			name: 'Shrek',
-			custom_image: 'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			custom_image:
+				'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
 			types: [{ type: { name: 'ground' } }],
 			weight: 1500,
 			height: 20,
@@ -68,12 +68,12 @@ async function fetchPokemonData(id) {
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
 	return res.json();
-}
+};
 
 // ---------------------------------------------------------------
 // Booster generation
 // ---------------------------------------------------------------
-async function generateBooster() {
+const generateBooster = async () => {
 	generatedCards.value = []; // clear old cards
 
 	const empty = Array.from({ length: 5 }, () => ({
@@ -94,12 +94,12 @@ async function generateBooster() {
 			data,
 		};
 	}
-}
+};
 
-function cutBooster() {
+const cutBooster = () => {
 	cutted.value = true;
 	generateBooster();
-}
+};
 </script>
 
 <template>
