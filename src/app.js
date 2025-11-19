@@ -205,8 +205,8 @@ async function generateRandomCards() {
 	// Créer des éléments HTML pour chaque carte et récupérer les infos via l'API
 	for (const card of cards) {
 		const cardElement = document.createElement('div');
-        cardElement.classList.add('card');
-        cardElement.classList.add('rarity-' + card.rarity);
+		cardElement.classList.add('card');
+		cardElement.classList.add('rarity-' + card.rarity);
 		cardElement.innerHTML = `
             <div class="card-header">
                 <p class="card-name">${card.name}</p>
@@ -227,8 +227,8 @@ async function generateRandomCards() {
 		try {
 			// Récupérer les données du Pokémon via l'API
 			const pokemonData = await fetchPokemonData(card.id);
-            
-            cardElement.classList.add('type-' + pokemonData.types[0].type.name);
+
+			cardElement.classList.add('type-' + pokemonData.types[0].type.name);
 
 			// Mettre à jour la carte avec les informations récupérées
 			const illustration = cardElement.querySelector('.card-illustration');
