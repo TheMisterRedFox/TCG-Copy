@@ -15,7 +15,9 @@ fetch('../assets/pokemon.json')
 		return response.json();
 	})
 	.then((pokemonList) => {
-		pokemonCards = pokemonList.map((pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity));
+		pokemonCards = pokemonList.map(
+			(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
+		);
 	})
 	.catch((err) => console.error(err));
 
@@ -49,7 +51,9 @@ function generateCard() {
 			rarity = 5; // Shrek
 	}
 
-	const filteredCards = pokemonCards.filter((card) => card.getRarity() === rarity);
+	const filteredCards = pokemonCards.filter(
+		(card) => card.getRarity() === rarity,
+	);
 	const randomIndex = getRandomInt(0, filteredCards.length - 1);
 	return filteredCards[randomIndex];
 }
@@ -111,7 +115,10 @@ async function generateRandomCards() {
                 <p>Taille : ${pokemonData.height / 10} m</p>
             `;
 		} catch (error) {
-			console.error('Erreur lors de la récupération des données du Pokémon :', error);
+			console.error(
+				'Erreur lors de la récupération des données du Pokémon :',
+				error,
+			);
 			const illustration = cardElement.querySelector('.card-illustration');
 			illustration.innerHTML = `<p>Erreur de chargement</p>`;
 		}
@@ -124,14 +131,17 @@ async function fetchPokemonData(pokemonId) {
 		// Données fictives pour Shrek
 		return {
 			name: 'Shrek',
-			custom_image: 'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			custom_image:
+				'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
 			types: [{ type: { name: 'ground' } }],
 			weight: 1500,
 			height: 20,
 		};
 	}
 
-	const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
+	const response = await fetch(
+		`https://pokeapi.co/api/v2/pokemon/${pokemonId}`,
+	);
 	if (!response.ok) {
 		throw new Error(`Erreur HTTP ! statut : ${response.status}`);
 	}
