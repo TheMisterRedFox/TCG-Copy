@@ -166,17 +166,6 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function generateRandomCards() {
-    const cards = [];
-
-    while (cards.length < 10) {
-        const newCard = generateCard();
-        cards.push(newCard);
-    }
-
-    console.log(cards);
-}
-
 function generateCard() {
     const rarityRoll = Math.random() * 100;
     let rarity;
@@ -198,4 +187,41 @@ function generateCard() {
     return filteredCards[randomIndex];
 }
 
-document.getElementById('btn-paquet').addEventListener('click', generateRandomCards);
+function generateRandomCards() {
+    const cardsContainer = document.querySelector('.cards-container');
+    cardsContainer.innerHTML = ''; // Vider le conteneur avant d'ajouter de nouvelles cartes
+
+    const cards = [];
+
+    while (cards.length < 10) {
+        const newCard = generateCard();
+        cards.push(newCard);
+    }
+
+    // Créer des éléments HTML pour chaque carte et les ajouter au conteneur
+    cards.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+        cardElement.innerHTML = `
+            <p>Nom : ${card.name}</p>
+            <p>Rareté : ${getRarityName(card.rarity)}</p>
+        `;
+        cardsContainer.appendChild(cardElement);
+    });
+}
+
+function getRarityName(rarity) {
+    switch (rarity) {
+        case 0: return 'Commun';
+        case 1: return 'Peu commun';
+        case 2: return 'Rare';
+        case 3: return 'Très rare';
+        case 4: return 'Légendaire';
+        default: return 'Inconnu';
+    }
+}
+
+document.querySelector(".cut-line").addEventListener("click", () => { 
+    document.querySelector(".booster-container").classList.add("cutted");
+    generateRandomCards();
+});
