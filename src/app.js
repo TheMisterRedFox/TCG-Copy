@@ -15,9 +15,7 @@ fetch('../assets/pokemon.json')
 		return response.json();
 	})
 	.then((pokemonList) => {
-		pokemonCards = pokemonList.map(
-			(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
-		);
+		pokemonCards = pokemonList.map((pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity));
 	})
 	.catch((err) => console.error(err));
 
@@ -51,9 +49,7 @@ function generateCard() {
 			rarity = 5; // Shrek
 	}
 
-	const filteredCards = pokemonCards.filter(
-		(card) => card.getRarity() === rarity,
-	);
+	const filteredCards = pokemonCards.filter((card) => card.getRarity() === rarity);
 	const randomIndex = getRandomInt(0, filteredCards.length - 1);
 	return filteredCards[randomIndex];
 }
@@ -96,9 +92,17 @@ async function generateRandomCards() {
 
 			// Mettre à jour la carte avec les informations récupérées
 			const illustration = cardElement.querySelector('.card-illustration');
-			illustration.innerHTML = `
-                <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${card.id.toString().padStart(3, '0')}.png" alt="${pokemonData.name}" />
-            `;
+
+			if (pokemonData.custom_image) {
+				illustration.innerHTML = `
+					<img src="${pokemonData.custom_image}" alt="${pokemonData.name}" />
+				`;
+			} else {
+				illustration.innerHTML = `
+                <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${card.id
+									.toString()
+									.padStart(3, '0')}.png" alt="${pokemonData.name}" />`;
+			}
 
 			const body = cardElement.querySelector('.card-body');
 			body.innerHTML += `
@@ -107,10 +111,7 @@ async function generateRandomCards() {
                 <p>Taille : ${pokemonData.height / 10} m</p>
             `;
 		} catch (error) {
-			console.error(
-				'Erreur lors de la récupération des données du Pokémon :',
-				error,
-			);
+			console.error('Erreur lors de la récupération des données du Pokémon :', error);
 			const illustration = cardElement.querySelector('.card-illustration');
 			illustration.innerHTML = `<p>Erreur de chargement</p>`;
 		}
@@ -119,9 +120,18 @@ async function generateRandomCards() {
 
 // Fonction pour récupérer les données du Pokémon depuis l'API PokéAPI
 async function fetchPokemonData(pokemonId) {
-	const response = await fetch(
-		`https://pokeapi.co/api/v2/pokemon/${pokemonId}`,
-	);
+	if (pokemonId === 0) {
+		// Données fictives pour Shrek
+		return {
+			name: 'Shrek',
+			custom_image: 'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			types: [{ type: { name: 'ground' } }],
+			weight: 1500,
+			height: 20,
+		};
+	}
+
+	const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
 	if (!response.ok) {
 		throw new Error(`Erreur HTTP ! statut : ${response.status}`);
 	}

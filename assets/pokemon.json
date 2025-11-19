@@ -150,5 +150,5 @@
 	{ "id": 149, "name": "Dracolosse", "rarity": 4 },
 	{ "id": 150, "name": "Mewtwo", "rarity": 4 },
 	{ "id": 151, "name": "Mew", "rarity": 4 },
-	{ "id": 152, "name": "Shrek", "rarity": 5 }
+	{ "id": 0, "name": "Shrek", "rarity": 5 }
 ]
