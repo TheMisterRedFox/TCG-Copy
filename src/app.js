@@ -15,13 +15,9 @@ fetch('../assets/pokemon.json')
 		return response.json();
 	})
 	.then((pokemonList) => {
-		pokemonCards = pokemonList.map(
-			(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
-		);
+		pokemonCards = pokemonList.map((pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity));
 	})
 	.catch((err) => console.error(err));
-
-// const pokemonCards = pokemonList.map((pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity));
 
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -33,27 +29,25 @@ function generateCard() {
 
 	switch (true) {
 		case rarityRoll < 72.5:
-			rarity = 0; // Commun
+			rarity = 0; // Common
 			break;
 		case rarityRoll < 92.5:
-			rarity = 1; // Peu commun
+			rarity = 1; // Uncommon
 			break;
 		case rarityRoll < 97.5:
 			rarity = 2; // Rare
 			break;
 		case rarityRoll < 99.6:
-			rarity = 3; // Très rare
+			rarity = 3; // Very Rare
 			break;
 		case rarityRoll < 99.9:
-			rarity = 4; // Légendaire
+			rarity = 4; // Legendary
 			break;
 		default:
 			rarity = 5; // Shrek
 	}
 
-	const filteredCards = pokemonCards.filter(
-		(card) => card.getRarity() === rarity,
-	);
+	const filteredCards = pokemonCards.filter((card) => card.getRarity() === rarity);
 	const randomIndex = getRandomInt(0, filteredCards.length - 1);
 	return filteredCards[randomIndex];
 }
@@ -77,9 +71,9 @@ async function generateRandomCards() {
             <div class="card-header">
                 <p class="card-name">${card.name}</p>
             </div>
-            <div class="card-illustration">Chargement...</div>
+            <div class="card-illustration">Loading...</div>
             <div class="card-body">
-                <p>Rareté : ${getRarityName(card.rarity)}</p>
+                <p>Rarity : ${getRarityName(card.rarity)}</p>
             </div>
         `;
 
@@ -111,16 +105,14 @@ async function generateRandomCards() {
 			const body = cardElement.querySelector('.card-body');
 			body.innerHTML += `
                 <p>Type : ${pokemonData.types.map((type) => type.type.name).join(', ')}</p>
-                <p>Poids : ${pokemonData.weight / 10} kg</p>
-                <p>Taille : ${pokemonData.height / 10} m</p>
+                <p>Weight : ${pokemonData.weight / 10} kg</p>
+                <p>Height : ${pokemonData.height / 10} m</p>
+				<p>Abilities : ${pokemonData.abilities.map((ability) => ability.ability.name).join(', ')}</p>
             `;
 		} catch (error) {
-			console.error(
-				'Erreur lors de la récupération des données du Pokémon :',
-				error,
-			);
+			console.error('Erreur lors de la récupération des données du Pokémon :', error);
 			const illustration = cardElement.querySelector('.card-illustration');
-			illustration.innerHTML = `<p>Erreur de chargement</p>`;
+			illustration.innerHTML = `<p>Loading error</p>`;
 		}
 	}
 }
@@ -131,17 +123,14 @@ async function fetchPokemonData(pokemonId) {
 		// Données fictives pour Shrek
 		return {
 			name: 'Shrek',
-			custom_image:
-				'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			custom_image: 'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
 			types: [{ type: { name: 'ground' } }],
 			weight: 1500,
 			height: 20,
 		};
 	}
 
-	const response = await fetch(
-		`https://pokeapi.co/api/v2/pokemon/${pokemonId}`,
-	);
+	const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
 	if (!response.ok) {
 		throw new Error(`Erreur HTTP ! statut : ${response.status}`);
 	}
@@ -151,17 +140,17 @@ async function fetchPokemonData(pokemonId) {
 function getRarityName(rarity) {
 	switch (rarity) {
 		case 0:
-			return 'Commun';
+			return 'Common';
 		case 1:
-			return 'Peu commun';
+			return 'Uncommon';
 		case 2:
 			return 'Rare';
 		case 3:
-			return 'Très rare';
+			return 'Very Rare';
 		case 4:
-			return 'Légendaire';
+			return 'Legendary';
 		default:
-			return 'Inconnu';
+			return 'Shrek';
 	}
 }
 
