@@ -116,6 +116,12 @@ main {
 				margin: 5px 10px;
 				border: 2px solid #c9c8c6;
 				height: 150px;
+				display: flex;
+				justify-content: center;
+			}
+
+			.card-illustration img {
+				height: 100%;
 			}
 
 			.card-body {
