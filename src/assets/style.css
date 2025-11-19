@@ -30,7 +30,6 @@ main {
 
 		.top-border,
 		.bottom-border {
-			/* background-color: #AD6BDB; */
 			background-color: #678b36;
 		}
 
@@ -69,7 +68,7 @@ main {
 			}
 
 			.cover.shrek {
-				background: url('./assets/img/shrek.webp') no-repeat center / cover;
+				background: url('./img/shrek.webp') no-repeat center / cover;
 			}
 		}
 
