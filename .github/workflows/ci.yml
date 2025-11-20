@@ -36,6 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Run type check
@@ -55,6 +56,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Run unit tests
@@ -65,3 +67,23 @@ jobs:
           name: coverage-report
           path: coverage
           if-no-files-found: warn
+
+  report-coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download coverage report
+        uses: actions/download-artifact@v5
+        with:
+          name: coverage-report
+      - name: Report coverage to PR
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          json-summary-path: pr-coverage/coverage-summary.json
+          json-summary-compare-path: main-coverage/coverage-summary.json
+          json-final-path: pr-coverage/coverage-final.json
+          comment-on: pr
