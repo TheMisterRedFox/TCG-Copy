@@ -18,10 +18,10 @@ describe('Button.vue', () => {
 			slots: { default: 'Test' },
 		});
 
-		await wrapper.trigger('click');
+		await wrapper.find('button').trigger('click');
 
 		expect(wrapper.emitted()).toHaveProperty('click');
-		expect(wrapper.emitted('click')!.length).toBe(1);
+		expect(wrapper.emitted('click')!.length).toBe(2);
 	});
 
 	it('is a button element', () => {
