@@ -131,35 +131,48 @@ const cutBooster = () => {
 				@click="item.clicked = true"
 			>
 				<!-- Header -->
-				<div class="card-header">
-					<p class="card-name">
-						{{ item.card?.name || 'Loading…' }}
-					</p>
+				<div class="card-inner">
+					<div class="card-header">
+						<p class="card-name">
+							{{ item.card?.name || 'Loading…' }}
+						</p>
+					</div>
+
+					<!-- Illustration -->
+					<div class="card-illustration">
+						<div v-if="item.loading">Loading…</div>
+
+						<img v-else-if="item.data.custom_image" :src="item.data.custom_image" :alt="item.data.name" />
+
+						<img
+							v-else
+							:src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card.id).padStart(
+								3,
+								'0'
+							)}.png`"
+							:alt="item.data.name"
+						/>
+					</div>
+
+					<!-- Body -->
+					<div class="card-body" v-if="!item.loading && item.data">
+						<p>Rarity : {{ getRarityName(item.card.rarity) }}</p>
+						<p>Type : {{ item.data.types.map((t) => t.type.name).join(', ') }}</p>
+						<p>Weight : {{ item.data.weight / 10 }} kg</p>
+						<p>Height : {{ item.data.height / 10 }} m</p>
+						<p>Abilities : {{ item.data.abilities.map((a) => a.ability.name).join(', ') }}</p>
+					</div>
 				</div>
-
-				<!-- Illustration -->
-				<div class="card-illustration">
-					<div v-if="item.loading">Loading…</div>
-
-					<img v-else-if="item.data.custom_image" :src="item.data.custom_image" :alt="item.data.name" />
-
-					<img
-						v-else
-						:src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card.id).padStart(
-							3,
-							'0'
-						)}.png`"
-						:alt="item.data.name"
-					/>
-				</div>
-
-				<!-- Body -->
-				<div class="card-body" v-if="!item.loading && item.data">
-					<p>Rarity : {{ getRarityName(item.card.rarity) }}</p>
-					<p>Type : {{ item.data.types.map((t) => t.type.name).join(', ') }}</p>
-					<p>Weight : {{ item.data.weight / 10 }} kg</p>
-					<p>Height : {{ item.data.height / 10 }} m</p>
-					<p>Abilities : {{ item.data.abilities.map((a) => a.ability.name).join(', ') }}</p>
+				<div class="card-rarity">
+					<span v-if="item.card.rarity < 4">
+						<span v-for="n in item.card.rarity + 1" :key="n">🔶</span>
+					</span>
+					<span v-else-if="item.card.rarity === 4">
+						🌟 Legendary
+					</span>
+					<span v-else-if="item.card.rarity === 5">
+						🤢 Shrek
+					</span>
 				</div>
 			</div>
 		</div>

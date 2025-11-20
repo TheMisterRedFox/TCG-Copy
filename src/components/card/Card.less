@@ -6,40 +6,76 @@
     flex-direction: column;
     height: @card-height;
     width: @card-width;
-    border-radius: 15px;
-    border: @card-border;
     background-color: @card-default-background-color;
     box-shadow: @card-box-shadow;
+    border-radius: @card-border-radius;
+    padding: @card-border-border-width;
+    background: @card-default-border-color;
 
-    .card-header {
-        padding-inline: 10px;
+    .card-inner {
+        border-radius: calc(@card-border-radius / 2);
+        height: 100%;
 
-        .card-name {
-            font-weight: bold;
-            padding-top: 2px;
+        .card-header {
+            padding-inline: 10px;
+
+            .card-name {
+                font-weight: bold;
+                padding-top: 2px;
+            }
+        }
+
+        .card-illustration {
+            margin: 5px 10px;
+            border: @card-illustration-border;
+            background-color: @card-illustration-background-color;
+            height: @card-illustration-height;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-illustration img {
+            height: 100%;
+        }
+
+        .card-body {
+            margin: 10px;
         }
     }
 
-    .card-illustration {
-        margin: 5px 10px;
-        border: @card-illustration-border;
-        background-color: @card-illustration-background-color;
-        height: @card-illustration-height;
-        display: flex;
-        justify-content: center;
-    }
-
-    .card-illustration img {
-        height: 100%;
-    }
-
-    .card-body {
-        margin: 10px;
+    .card-rarity {
+        position: absolute;
+        left: 15px;
+        bottom: 15px;
+        font-size: 12px;
     }
 
     &.clicked {
         transition: 0.2s;
         transform: translateX(100vw);
+    }
+
+    &.rarity-3 {
+        background: linear-gradient(45deg, #b1b1b1 5%, #fff 10%, #ccc 30%, #ddd 50%, #ccc 70%, #fff 80%, #b1b1b1 95%)
+    }
+
+    &.rarity-4 {
+        background: linear-gradient(45deg,
+                rgba(255, 0, 0, 1) 0%,
+                rgba(255, 154, 0, 1) 10%,
+                rgba(208, 222, 33, 1) 20%,
+                rgba(79, 220, 74, 1) 30%,
+                rgba(63, 218, 216, 1) 40%,
+                rgba(47, 201, 226, 1) 50%,
+                rgba(28, 127, 238, 1) 60%,
+                rgba(95, 21, 242, 1) 70%,
+                rgba(186, 12, 248, 1) 80%,
+                rgba(251, 7, 217, 1) 90%,
+                rgba(255, 0, 0, 1) 100%);
+    }
+
+    &.rarity-5 {
+        background: linear-gradient(0deg, #7f410d, #ffc28f, #8fff9d, #71cf0a);
     }
 
     &.type-normal {
