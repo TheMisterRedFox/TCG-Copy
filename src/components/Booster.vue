@@ -1,23 +1,31 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import pokemonList from '../assets/pokemon.json';
-import { Card } from '../models/card.ts';
+import pokemonList from '@/assets/pokemon.json';
+import type { Abilities, Types } from '@/interface/GeneralTypes';
+import type { GeneratedCard } from '@/interface/GeneratedCard';
+import type { PokemonAPIData } from '@/interface/PokemonAPIData';
+import type { PokemonJSON } from '@/interface/PokemonJSON';
+import { Card } from '@/models/card';
 
 // ---------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------
-const pokemonCards = pokemonList.map((p) => new Card(p.id, p.name, p.rarity));
 
-const generatedCards = ref([]);
+const typedPokemonList: PokemonJSON[] = pokemonList;
+const pokemonCards = typedPokemonList.map(
+	(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
+);
+
+const generatedCards = ref<GeneratedCard[]>([]);
 const cutted = ref(false);
 
 // ---------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------
-const getRandomInt = (min, max) =>
+const getRandomInt = (min: number, max: number): number =>
 	Math.floor(Math.random() * (max - min + 1)) + min;
 
-const getRarityName = (rarity) => {
+const getRarityName = (rarity: number): string => {
 	switch (rarity) {
 		case 0:
 			return 'Common';
@@ -34,9 +42,9 @@ const getRarityName = (rarity) => {
 	}
 };
 
-const pickRandomCard = () => {
+const pickRandomCard = (): Card => {
 	const roll = Math.random() * 100;
-	let rarity;
+	let rarity: number;
 
 	if (roll < 72.5) rarity = 0;
 	else if (roll < 92.5) rarity = 1;
@@ -45,14 +53,14 @@ const pickRandomCard = () => {
 	else if (roll < 99.9) rarity = 4;
 	else rarity = 5;
 
-	const list = pokemonCards.filter((c) => c.rarity === rarity);
-	return list[getRandomInt(0, list.length - 1)];
+	const list = pokemonCards.filter((card) => card.rarity === rarity);
+	return list[getRandomInt(0, list.length - 1)]!;
 };
 
 // ---------------------------------------------------------------
 // API fetch (PokéAPI or custom for Shrek)
 // ---------------------------------------------------------------
-const fetchPokemonData = async (id) => {
+const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
 		return {
 			name: 'Shrek',
@@ -73,7 +81,7 @@ const fetchPokemonData = async (id) => {
 // ---------------------------------------------------------------
 // Booster generation
 // ---------------------------------------------------------------
-const generateBooster = async () => {
+const generateBooster = async (): Promise<void> => {
 	generatedCards.value = []; // clear old cards
 
 	const empty = Array.from({ length: 5 }, () => ({
@@ -125,8 +133,8 @@ const cutBooster = () => {
 				class="card"
 				:class="[
 					item.clicked ? 'clicked' : '',
-					item.card ? `rarity-${item.card.rarity}` : '',
-					item.card ? `type-${item.data.types[0].type.name}` : '',
+					item.card ? `rarity-${item.card?.rarity}` : '',
+					item.card ? `type-${item.data?.types[0]?.type.name}` : '',
 				]"
 				@click="item.clicked = true"
 			>
@@ -141,25 +149,25 @@ const cutBooster = () => {
 				<div class="card-illustration">
 					<div v-if="item.loading">Loading…</div>
 
-					<img v-else-if="item.data.custom_image" :src="item.data.custom_image" :alt="item.data.name" />
+					<img v-else-if="item.data?.custom_image" :src="item.data?.custom_image" :alt="item.data?.name" />
 
 					<img
 						v-else
-						:src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card.id).padStart(
+						:src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card?.id).padStart(
 							3,
 							'0'
 						)}.png`"
-						:alt="item.data.name"
+						:alt="item.data?.name"
 					/>
 				</div>
 
 				<!-- Body -->
 				<div class="card-body" v-if="!item.loading && item.data">
-					<p>Rarity : {{ getRarityName(item.card.rarity) }}</p>
-					<p>Type : {{ item.data.types.map((t) => t.type.name).join(', ') }}</p>
+					<p>Rarity : {{ getRarityName(item.card?.rarity ?? 0) }}</p>
+					<p>Type : {{ item.data.types.map((type: Types) => type.type.name).join(', ') }}</p>
 					<p>Weight : {{ item.data.weight / 10 }} kg</p>
 					<p>Height : {{ item.data.height / 10 }} m</p>
-					<p>Abilities : {{ item.data.abilities.map((a) => a.ability.name).join(', ') }}</p>
+					<p>Abilities : {{ item.data.abilities.map((ability: Abilities) => ability.ability.name).join(', ') }}</p>
 				</div>
 			</div>
 		</div>
