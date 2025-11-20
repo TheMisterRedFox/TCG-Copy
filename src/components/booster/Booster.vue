@@ -12,9 +12,7 @@ import { Card } from '@/models/card';
 // ---------------------------------------------------------------
 
 const typedPokemonList: PokemonJSON[] = pokemonList;
-const pokemonCards = typedPokemonList.map(
-	(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
-);
+const pokemonCards = typedPokemonList.map((pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity));
 
 const generatedCards = ref<GeneratedCard[]>([]);
 const cutted = ref(false);
@@ -22,8 +20,7 @@ const cutted = ref(false);
 // ---------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------
-const getRandomInt = (min: number, max: number): number =>
-	Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomInt = (min: number, max: number): number => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getRarityName = (rarity: number): string => {
 	switch (rarity) {
@@ -64,8 +61,7 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
 		return {
 			name: 'Shrek',
-			custom_image:
-				'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			custom_image: 'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
 			types: [{ type: { name: 'ground' } }],
 			weight: 1500,
 			height: 20,
@@ -112,14 +108,14 @@ const cutBooster = () => {
 
 <template>
 	<div class="opening-container">
-		<div class="booster-container" :class="{ cutted }">
+		<div class="booster-container shrek" :class="{ cutted }">
 			<div class="cut-container">
 				<div class="top-border"></div>
 				<div class="cut-line" @click="cutBooster"></div>
 			</div>
 			<div class="uncutting-container">
 				<div class="center-body">
-					<div class="cover shrek"></div>
+					<div class="cover"></div>
 					<div class="shadow"></div>
 				</div>
 				<div class="bottom-border"></div>
@@ -176,4 +172,6 @@ const cutBooster = () => {
 
 <style scoped>
 /* Reuse your existing CSS */
+@import './Booster.less';
+@import '../card/Card.less';
 </style>

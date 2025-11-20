@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Booster from './components/Booster.vue';
+import Booster from './components/booster/Booster.vue';
 </script>
 
 <template>

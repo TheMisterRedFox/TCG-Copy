@@ -1,0 +1,23 @@
+@import "./all-imports.less";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: @main-font-family;
+    overflow: hidden;
+}
+
+main {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+img::selection {
+    background: transparent;
+}

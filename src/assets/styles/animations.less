@@ -1,0 +1,30 @@
+/* Animation pour jeter le haut du booster*/
+@keyframes throw-to-top-right {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(50vw, -20vh) rotate(15deg);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(100vw, -100vh) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+/* Animation pour faire aller vers le bas le booster après ouverture*/
+@keyframes throw-booster {
+    0% {
+        transform: translate(0, 0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(0, 150vh);
+        opacity: 0;
+    }
+}
