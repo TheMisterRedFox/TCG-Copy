@@ -64,8 +64,7 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
 		return {
 			name: 'Shrek',
-			custom_image:
-				'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			custom_image: '../../assets/img/sticker-shrek.jpg',
 			types: [{ type: { name: 'ground' } }],
 			weight: 1500,
 			height: 20,
