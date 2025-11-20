@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import pokemonList from '../assets/pokemon.json';
-import { Card } from '../models/card.ts';
+import pokemonList from '../../assets/pokemon.json';
+import { Card } from '../../models/card.ts';
 
 // ---------------------------------------------------------------
 // Data
@@ -168,4 +168,6 @@ const cutBooster = () => {
 
 <style scoped>
 /* Reuse your existing CSS */
+@import './Booster.less';
+@import '../card/Card.less';
 </style>
