@@ -1,6 +1,6 @@
 {
 	"name": "tcg-copy",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"private": true,
 	"type": "module",
 	"engines": {
@@ -12,7 +12,8 @@
 		"preview": "vite preview",
 		"test:unit": "vitest",
 		"build-only": "vite build",
-		"type-check": "vue-tsc --build"
+		"type-check": "vue-tsc --build",
+		"biome": "biome check --write"
 	},
 	"dependencies": {
 		"@biomejs/biome": "2.3.6",
