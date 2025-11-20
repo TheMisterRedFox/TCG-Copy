@@ -67,29 +67,31 @@ jobs:
           name: coverage-report
           path: coverage
           if-no-files-found: warn
+      - name: List coverage folder
+        run: ls -R coverage
 
-  report-coverage:
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - name: Download coverage report
-        uses: actions/download-artifact@v5
-        with:
-          name: coverage-report
-      - name: Prepare coverage reports
-        run: |
-          mkdir -p pr-coverage main-coverage
-          cp coverage-report/coverage/coverage-summary.json pr-coverage/
-          cp coverage-report/coverage/coverage-final.json pr-coverage/
-      - name: Report coverage to PR
-        if: always()
-        uses: davelosert/vitest-coverage-report-action@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          json-summary-path: pr-coverage/coverage-summary.json
-          json-summary-compare-path: main-coverage/coverage-summary.json
-          json-final-path: pr-coverage/coverage-final.json
-          comment-on: pr
+  # report-coverage:
+  #   needs: test
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     pull-requests: write
+  #   steps:
+  #     - name: Download coverage report
+  #       uses: actions/download-artifact@v5
+  #       with:
+  #         name: coverage-report
+  #     - name: Prepare coverage reports
+  #       run: |
+  #         mkdir -p pr-coverage main-coverage
+  #         cp coverage-report/coverage/coverage-summary.json pr-coverage/
+  #         cp coverage-report/coverage/coverage-final.json pr-coverage/
+  #     - name: Report coverage to PR
+  #       if: always()
+  #       uses: davelosert/vitest-coverage-report-action@v2
+  #       with:
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         json-summary-path: pr-coverage/coverage-summary.json
+  #         json-summary-compare-path: main-coverage/coverage-summary.json
+  #         json-final-path: pr-coverage/coverage-final.json
+  #         comment-on: pr
