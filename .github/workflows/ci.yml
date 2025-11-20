@@ -81,9 +81,9 @@ jobs:
           name: coverage-report
       - name: Prepare coverage reports
         run: |
-          mkdir pr-coverage main-coverage
-          cp coverage/coverage-summary.json pr-coverage/
-          cp coverage/coverage-final.json pr-coverage/
+          mkdir -p pr-coverage main-coverage
+          cp coverage-report/coverage/coverage-summary.json pr-coverage/
+          cp coverage-report/coverage/coverage-final.json pr-coverage/
       - name: Report coverage to PR
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
