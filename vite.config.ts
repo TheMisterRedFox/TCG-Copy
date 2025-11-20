@@ -11,4 +11,11 @@ export default defineConfig({
 			'@': fileURLToPath(new URL('./src', import.meta.url)),
 		},
 	},
+	css: {
+		preprocessorOptions: {
+			less: {
+				additionalData: `@import "@/assets/styles/vars.less";`
+			}
+		}
+	}
 });
