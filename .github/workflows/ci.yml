@@ -24,6 +24,7 @@ jobs:
         run: biome ci .
 
   test:
+    needs: quality
     runs-on: ubuntu-latest
     permissions:
       contents: read
