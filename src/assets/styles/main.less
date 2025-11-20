@@ -1,4 +1,6 @@
-@import "vars.less";
+@import "./vars.less";
+@import "./mixins.less";
+@import "./animations.less";
 
 * {
     margin: 0;
@@ -6,7 +8,7 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, serif;
+    font-family: @main-font-family;
     overflow: hidden;
 }
 
@@ -25,38 +27,38 @@ main {
     .booster-container {
         position: relative;
         z-index: 2;
-        width: 300px;
+        width: @booster-container-width;
         border-radius: 5px;
         display: flex;
         flex-direction: column;
 
         .top-border,
         .bottom-border {
-            background-color: #678b36;
+            background-color: @default-booster-color;
         }
 
         .cut-container {
             display: flex;
             flex-direction: column;
-            box-shadow: 0 0 10px #cacaca;
+            box-shadow: @main-box-shadow;
 
             .cut-line {
-                background-color: #38eff3;
-                height: 5px;
-                border-top: 5px solid #fff;
+                background-color: @cut-line-color;
+                height: @cut-line-height;
+                border-top: @cut-line-border;
             }
         }
 
         .uncutting-container {
             display: flex;
             flex-direction: column;
-            height: 475px;
-            border-top: 5px solid #fff;
-            box-shadow: 0 0 10px #cacaca;
+            height: @booster-uncutting-container-height;
+            border-top: @cut-line-border;
+            box-shadow: @main-box-shadow;
         }
 
         .top-border {
-            height: 75px;
+            height: @booster-top-border-height;
         }
 
         .center-body {
@@ -67,10 +69,7 @@ main {
                 width: 100%;
                 height: 100%;
                 pointer-events: none;
-            }
-
-            .cover.shrek {
-                background: url('../img/shrek.webp') no-repeat center / cover;
+                //TODO METTRE IMAGE DE BASE background: url('') no-repeat center / cover;
             }
         }
 
@@ -78,20 +77,33 @@ main {
             position: absolute;
             width: 100%;
             height: 100%;
-            box-shadow: inset 0px -10px 20px 0 #000000b3;
+            box-shadow: @booster-cover-box-shadow;
             top: 0;
             left: 0;
         }
 
         .bottom-border {
-            height: 20px;
+            height: @booster-bottom-border-height;
+        }
+
+        // Booster Shrek
+        &.shrek {
+
+            .top-border,
+            .bottom-border {
+                background-color: @shrek-booster-color;
+            }
+
+            .cover {
+                background: url('../img/shrek.webp') no-repeat center / cover;
+            }
         }
     }
 
     .cards-container {
         position: absolute;
         z-index: 1;
-        top: 90px;
+        top: @card-container-absolute-top-position;
 
         .card {
             position: absolute;
@@ -100,9 +112,9 @@ main {
             height: 430px;
             width: 276px;
             border-radius: 15px;
-            border: 12px solid #ffe167;
-            background-color: white;
-            box-shadow: 0 0 5px #cacaca;
+            border: @card-border;
+            background-color: @card-default-background-color;
+            box-shadow: @card-box-shadow;
 
             .card-header {
                 padding-inline: 10px;
@@ -115,9 +127,9 @@ main {
 
             .card-illustration {
                 margin: 5px 10px;
-                border: 2px solid #c9c8c6;
-                background-color: #fff;
-                height: 150px;
+                border: @card-illustration-border;
+                background-color: @card-illustration-background-color;
+                height: @card-illustration-height;
                 display: flex;
                 justify-content: center;
             }
@@ -129,194 +141,92 @@ main {
             .card-body {
                 margin: 10px;
             }
-        }
 
-        .card.clicked {
-            transition: 0.2s;
-            transform: translateX(100vw);
-        }
+            &.clicked {
+                transition: 0.2s;
+                transform: translateX(100vw);
+            }
 
-        .card.type-normal {
-            background: linear-gradient(to right,
-                    #e0dcd9 0%,
-                    #f1f2eb 30%,
-                    #f1f2eb 70%,
-                    #e0dcd9 100%);
-        }
+            &.type-normal {
+                .card-background(@card-background-type-normal-primary, @card-background-type-normal-secondary);
+            }
 
-        .card.type-fire {
-            background: linear-gradient(to right,
-                    #e39f6d 0%,
-                    #f08030 30%,
-                    #f08030 70%,
-                    #e39f6d 100%);
-        }
+            &.type-fire {
+                .card-background(@card-background-type-fire-primary, @card-background-type-fire-secondary);
+            }
 
-        .card.type-water {
-            background: linear-gradient(to right,
-                    #8cd6f7 0%,
-                    #4fc0ef 30%,
-                    #4fc0ef 70%,
-                    #8cd6f7 100%);
-        }
+            &.type-water {
+                .card-background(@card-background-type-water-primary, @card-background-type-water-secondary);
+            }
 
-        .card.type-grass {
-            background: linear-gradient(to right,
-                    #cedf42 0%,
-                    #78c850 30%,
-                    #78c850 70%,
-                    #cedf42 100%);
-        }
+            &.type-grass {
+                .card-background(@card-background-type-grass-primary, @card-background-type-grass-secondary);
+            }
 
-        .card.type-electric {
-            background: linear-gradient(to right,
-                    #eba629 0%,
-                    #f8d030 30%,
-                    #f8d030 70%,
-                    #eba629 100%);
-        }
+            &.type-electric {
+                .card-background(@card-background-type-electric-primary, @card-background-type-electric-secondary);
+            }
 
-        .card.type-ice {
-            background: linear-gradient(to right,
-                    #c5f3f3 0%,
-                    #98d8d8 30%,
-                    #98d8d8 70%,
-                    #c5f3f3 100%);
-        }
+            &.type-ice {
+                .card-background(@card-background-type-ice-primary, @card-background-type-ice-secondary);
+            }
 
-        .card.type-fighting {
-            background: linear-gradient(to right,
-                    #dd5f59 0%,
-                    #d68231 30%,
-                    #d68231 70%,
-                    #dd5f59 100%);
-        }
+            &.type-fighting {
+                .card-background(@card-background-type-fighting-primary, @card-background-type-fighting-secondary);
+            }
 
-        .card.type-poison {
-            background: linear-gradient(to right,
-                    #ca8aaf 0%,
-                    #8d528b 30%,
-                    #8d528b 70%,
-                    #ca8aaf 100%);
-        }
+            &.type-poison {
+                .card-background(@card-background-type-poison-primary, @card-background-type-poison-secondary);
+            }
 
-        .card.type-ground {
-            background: linear-gradient(to right,
-                    #dd5f59 0%,
-                    #d68231 30%,
-                    #d68231 70%,
-                    #dd5f59 100%);
-        }
+            &.type-ground {
+                .card-background(@card-background-type-ground-primary, @card-background-type-ground-secondary);
+            }
 
-        .card.type-flying {
-            background: linear-gradient(to right,
-                    #e0dcd9 0%,
-                    #f1f2eb 30%,
-                    #f1f2eb 70%,
-                    #e0dcd9 100%);
-        }
+            &.type-flying {
+                .card-background(@card-background-type-flying-primary, @card-background-type-flying-secondary);
+            }
 
-        .card.type-psychic {
-            background: linear-gradient(to right,
-                    #ca8aaf 0%,
-                    #8d528b 30%,
-                    #8d528b 70%,
-                    #ca8aaf 100%);
-        }
+            &.type-psychic {
+                .card-background(@card-background-type-psychic-primary, @card-background-type-psychic-secondary);
+            }
 
-        .card.type-bug {
-            background: linear-gradient(to right,
-                    #cedf42 0%,
-                    #78c850 30%,
-                    #78c850 70%,
-                    #cedf42 100%);
-        }
+            &.type-bug {
+                .card-background(@card-background-type-bug-primary, @card-background-type-bug-secondary);
+            }
 
-        .card.type-rock {
-            background: linear-gradient(to right,
-                    #dd5f59 0%,
-                    #d68231 30%,
-                    #d68231 70%,
-                    #dd5f59 100%);
-        }
+            &.type-rock {
+                .card-background(@card-background-type-rock-primary, @card-background-type-rock-secondary);
+            }
 
-        .card.type-ghost {
-            background: linear-gradient(to right,
-                    #bd7fb8 0%,
-                    #a76aac 30%,
-                    #a76aac 70%,
-                    #bd7fb8 100%);
-        }
+            &.type-ghost {
+                .card-background(@card-background-type-ghost-primary, @card-background-type-ghost-secondary);
+            }
 
-        .card.type-dragon {
-            background: linear-gradient(to right,
-                    #d3b33b 0%,
-                    #d2973a 30%,
-                    #d2973a 70%,
-                    #d3b33b 100%);
-        }
+            &.type-dragon {
+                .card-background(@card-background-type-dragon-primary, @card-background-type-dragon-secondary);
+            }
 
-        .card.type-dark {
-            background: linear-gradient(to right,
-                    #2a5f66 0%,
-                    #00201b 30%,
-                    #00201b 70%,
-                    #2a5f66 100%);
-        }
+            &.type-dark {
+                .card-background(@card-background-type-dark-primary, @card-background-type-dark-secondary);
+            }
 
-        .card.type-steel {
-            background: linear-gradient(to right,
-                    #d1dde2 0%,
-                    #a4b5b7 30%,
-                    #a4b5b7 70%,
-                    #d1dde2 100%);
-        }
+            &.type-steel {
+                .card-background(@card-background-type-steel-primary, @card-background-type-steel-secondary);
+            }
 
-        .card.type-fairy {
-            background: linear-gradient(to right,
-                    #e35c8b 0%,
-                    #9e1638 30%,
-                    #9e1638 70%,
-                    #e35c8b 100%);
+            &.type-fairy {
+                .card-background(@card-background-type-fairy-primary, @card-background-type-fairy-secondary);
+            }
         }
     }
-}
 
-.booster-container.cutted {
-    animation: throw-booster 1s ease-in-out forwards 1s;
+    .booster-container.cutted {
+        animation: throw-booster 1s ease-in-out forwards 1s;
 
-    .cut-container {
-        animation: throw-to-top-right 1s ease-in-out forwards;
-    }
-}
-
-/* Animation pour jeter l'élément */
-@keyframes throw-to-top-right {
-    0% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 1;
-    }
-
-    50% {
-        transform: translate(50vw, -20vh) rotate(15deg);
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: translate(100vw, -100vh) rotate(45deg);
-        opacity: 0;
-    }
-}
-
-@keyframes throw-booster {
-    0% {
-        transform: translate(0, 0);
-        opacity: 1;
-    }
-
-    100% {
-        transform: translate(0, 150vh);
-        opacity: 0;
+        .cut-container {
+            animation: throw-to-top-right 1s ease-in-out forwards;
+        }
     }
 }
 

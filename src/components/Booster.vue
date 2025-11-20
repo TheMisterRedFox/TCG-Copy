@@ -104,14 +104,14 @@ const cutBooster = () => {
 
 <template>
 	<div class="opening-container">
-		<div class="booster-container" :class="{ cutted }">
+		<div class="booster-container shrek" :class="{ cutted }">
 			<div class="cut-container">
 				<div class="top-border"></div>
 				<div class="cut-line" @click="cutBooster"></div>
 			</div>
 			<div class="uncutting-container">
 				<div class="center-body">
-					<div class="cover shrek"></div>
+					<div class="cover"></div>
 					<div class="shadow"></div>
 				</div>
 				<div class="bottom-border"></div>
