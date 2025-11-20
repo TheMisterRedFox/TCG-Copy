@@ -1,0 +1,116 @@
+@import '../../assets/styles/all-imports.less';
+
+.card {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    height: @card-height;
+    width: @card-width;
+    border-radius: 15px;
+    border: @card-border;
+    background-color: @card-default-background-color;
+    box-shadow: @card-box-shadow;
+
+    .card-header {
+        padding-inline: 10px;
+
+        .card-name {
+            font-weight: bold;
+            padding-top: 2px;
+        }
+    }
+
+    .card-illustration {
+        margin: 5px 10px;
+        border: @card-illustration-border;
+        background-color: @card-illustration-background-color;
+        height: @card-illustration-height;
+        display: flex;
+        justify-content: center;
+    }
+
+    .card-illustration img {
+        height: 100%;
+    }
+
+    .card-body {
+        margin: 10px;
+    }
+
+    &.clicked {
+        transition: 0.2s;
+        transform: translateX(100vw);
+    }
+
+    &.type-normal {
+        .card-background(@card-background-type-normal-primary, @card-background-type-normal-secondary);
+    }
+
+    &.type-fire {
+        .card-background(@card-background-type-fire-primary, @card-background-type-fire-secondary);
+    }
+
+    &.type-water {
+        .card-background(@card-background-type-water-primary, @card-background-type-water-secondary);
+    }
+
+    &.type-grass {
+        .card-background(@card-background-type-grass-primary, @card-background-type-grass-secondary);
+    }
+
+    &.type-electric {
+        .card-background(@card-background-type-electric-primary, @card-background-type-electric-secondary);
+    }
+
+    &.type-ice {
+        .card-background(@card-background-type-ice-primary, @card-background-type-ice-secondary);
+    }
+
+    &.type-fighting {
+        .card-background(@card-background-type-fighting-primary, @card-background-type-fighting-secondary);
+    }
+
+    &.type-poison {
+        .card-background(@card-background-type-poison-primary, @card-background-type-poison-secondary);
+    }
+
+    &.type-ground {
+        .card-background(@card-background-type-ground-primary, @card-background-type-ground-secondary);
+    }
+
+    &.type-flying {
+        .card-background(@card-background-type-flying-primary, @card-background-type-flying-secondary);
+    }
+
+    &.type-psychic {
+        .card-background(@card-background-type-psychic-primary, @card-background-type-psychic-secondary);
+    }
+
+    &.type-bug {
+        .card-background(@card-background-type-bug-primary, @card-background-type-bug-secondary);
+    }
+
+    &.type-rock {
+        .card-background(@card-background-type-rock-primary, @card-background-type-rock-secondary);
+    }
+
+    &.type-ghost {
+        .card-background(@card-background-type-ghost-primary, @card-background-type-ghost-secondary);
+    }
+
+    &.type-dragon {
+        .card-background(@card-background-type-dragon-primary, @card-background-type-dragon-secondary);
+    }
+
+    &.type-dark {
+        .card-background(@card-background-type-dark-primary, @card-background-type-dark-secondary);
+    }
+
+    &.type-steel {
+        .card-background(@card-background-type-steel-primary, @card-background-type-steel-secondary);
+    }
+
+    &.type-fairy {
+        .card-background(@card-background-type-fairy-primary, @card-background-type-fairy-secondary);
+    }
+}

@@ -1,0 +1,96 @@
+@import '../../assets/styles/all-imports.less';
+
+.opening-container {
+    margin: 30px;
+    position: relative;
+
+    .booster-container {
+        position: relative;
+        z-index: 2;
+        width: @booster-container-width;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+
+        .top-border,
+        .bottom-border {
+            background-color: @default-booster-color;
+        }
+
+        .cut-container {
+            display: flex;
+            flex-direction: column;
+            box-shadow: @main-box-shadow;
+
+            .cut-line {
+                background-color: @cut-line-color;
+                height: @cut-line-height;
+                border-top: @cut-line-border;
+            }
+        }
+
+        .uncutting-container {
+            display: flex;
+            flex-direction: column;
+            height: @booster-uncutting-container-height;
+            border-top: @cut-line-border;
+            box-shadow: @main-box-shadow;
+        }
+
+        .top-border {
+            height: @booster-top-border-height;
+        }
+
+        .center-body {
+            flex: 1;
+            position: relative;
+
+            .cover {
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                //TODO METTRE IMAGE DE BASE background: url('') no-repeat center / cover;
+            }
+        }
+
+        .shadow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            box-shadow: @booster-cover-box-shadow;
+            top: 0;
+            left: 0;
+        }
+
+        .bottom-border {
+            height: @booster-bottom-border-height;
+        }
+
+        // Booster Shrek
+        &.shrek {
+
+            .top-border,
+            .bottom-border {
+                background-color: @shrek-booster-color;
+            }
+
+            .cover {
+                background: url('../../assets/img/shrek.webp') no-repeat center / cover;
+            }
+        }
+    }
+
+    .cards-container {
+        position: absolute;
+        z-index: 1;
+        top: @card-container-absolute-top-position;
+    }
+
+    .booster-container.cutted {
+        animation: throw-booster 1s ease-in-out forwards 1s;
+
+        .cut-container {
+            animation: throw-to-top-right 1s ease-in-out forwards;
+        }
+    }
+}

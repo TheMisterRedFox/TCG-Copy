@@ -1,0 +1,88 @@
+@main-font-family: 'Segoe UI', Arial, serif;
+@main-box-shadow-color: #cacaca;
+@main-box-shadow: 0 0 10px @main-box-shadow-color;
+
+@cut-line-color: #38eff3;
+@cut-line-height: 5px;
+@cut-line-border-color: #ffffff;
+@cut-line-border-height: 5px;
+@cut-line-border: @cut-line-border-height solid @cut-line-border-color;
+
+@booster-height: 585px;
+@booster-container-width: 300px;
+@booster-top-border-height: 75px;
+@booster-bottom-border-height: 20px;
+@booster-uncutting-container-height: @booster-height - @booster-top-border-height - @booster-bottom-border-height - @cut-line-height - @cut-line-border-height*2;
+@booster-cover-box-shadow: inset 0px -10px 20px 0 #000000b3;
+
+@card-container-absolute-top-position: @booster-top-border-height + @cut-line-height + @cut-line-border-height*2;
+@card-height: @booster-uncutting-container-height - 45px;
+@card-width: @booster-container-width - 24px;
+@card-default-background-color: #ffffff;
+@card-box-shadow: 0 0 5px @main-box-shadow-color;
+@card-default-border-color: #ffe167;
+@card-border: 12px solid #ffe167;
+@card-illustration-height: 150px;
+@card-illustration-border: 2px solid #c9c8c6;
+@card-illustration-background-color: #ffffff;
+
+/**
+  * COULEURS DE FOND DES CARTES SELON LE TYPE
+  */
+@card-background-type-normal-primary: #e0dcd9;
+@card-background-type-normal-secondary: #f1f2eb;
+
+@card-background-type-fire-primary: #e39f6d;
+@card-background-type-fire-secondary: #f08030;
+
+@card-background-type-water-primary: #8cd6f7;
+@card-background-type-water-secondary: #4fc0ef;
+
+@card-background-type-grass-primary: #cedf42;
+@card-background-type-grass-secondary: #78c850;
+
+@card-background-type-electric-primary: #eba629;
+@card-background-type-electric-secondary: #f8d030;
+
+@card-background-type-ice-primary: #c5f3f3;
+@card-background-type-ice-secondary: #98d8d8;
+
+@card-background-type-fighting-primary: #dd5f59;
+@card-background-type-fighting-secondary: #d68231;
+
+@card-background-type-psychic-primary: #ca8aaf;
+@card-background-type-psychic-secondary: #8d528b;
+
+@card-background-type-poison-primary: @card-background-type-psychic-primary;
+@card-background-type-poison-secondary: @card-background-type-psychic-secondary;
+
+@card-background-type-ground-primary: @card-background-type-fighting-primary;
+@card-background-type-ground-secondary: @card-background-type-fighting-secondary;
+
+@card-background-type-flying-primary: @card-background-type-normal-primary;
+@card-background-type-flying-secondary: @card-background-type-normal-secondary;
+
+@card-background-type-bug-primary: @card-background-type-grass-primary;
+@card-background-type-bug-secondary: @card-background-type-grass-secondary;
+
+@card-background-type-rock-primary: @card-background-type-fighting-primary;
+@card-background-type-rock-secondary: @card-background-type-fighting-secondary;
+
+@card-background-type-ghost-primary: #bd7fb8;
+@card-background-type-ghost-secondary: #a76aac;
+
+@card-background-type-dragon-primary: #d3b33b;
+@card-background-type-dragon-secondary: #d2973a;
+
+@card-background-type-dark-primary: #2a5f66;
+@card-background-type-dark-secondary: #00201b;
+
+@card-background-type-steel-primary: #d1dde2;
+@card-background-type-steel-secondary: #a4b5b7;
+
+@card-background-type-fairy-primary: #e35c8b;
+@card-background-type-fairy-secondary: #9e1638;
+// FIN DES COULEURS DE FOND DES CARTES SELON LE TYPE
+
+@default-booster-color: #bb62b9;
+@shrek-booster-color: #678b36;
