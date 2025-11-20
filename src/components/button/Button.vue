@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-	<button>
+	<button @click="$emit('click')">
 		<slot />
 	</button>
 </template>
