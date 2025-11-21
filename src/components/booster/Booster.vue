@@ -3,7 +3,9 @@ import { ref } from 'vue';
 import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
-import type { Abilities, Types } from '@/interface/GeneralTypes';
+import CardHeader from '@/components/card/CardHeader.vue';
+import CardImage from '@/components/card/CardImage.vue';
+import type { Type } from '@/interface/GeneralType';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
 import type { PokemonJSON } from '@/interface/PokemonJSON';
@@ -71,6 +73,7 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			weight: 1500,
 			height: 20,
 			abilities: [{ ability: { name: 'swamp-smash' } }],
+			moves: [{ move: { name: 'onion-throw' } }],
 		};
 	}
 
@@ -146,37 +149,25 @@ const redoBooster = (): void => {
 			>
 				<!-- Header -->
 				<div class="card-inner">
-					<div class="card-header">
-						<p class="card-name">
-							{{ item.card?.name || 'Loading…' }}
-						</p>
-					</div>
+					<CardHeader :v-if="!item.loading && item.card" :name="item.card?.name" />
 
-					<!-- Illustration -->
-					<div class="card-illustration">
-						<div v-if="item.loading">Loading…</div>
-
-						<img v-else-if="item.data?.custom_image" :src="item.data?.custom_image" :alt="item.data?.name" />
-
-						<img
-							v-else
-							:src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card?.id).padStart(
-								3,
-								'0'
-							)}.png`"
-							:alt="item.data?.name"
-						/>
-					</div>
+					<CardImage
+						:v-if="!item.loading && item.card"
+						:id="item.card?.id"
+						:name="item.card?.name"
+						:image="item.data?.custom_image || null"
+					/>
 
 					<!-- Body -->
 					<div class="card-body" v-if="!item.loading && item.data">
 						<p>Rarity : {{ getRarityName(item.card?.rarity ?? 0) }}</p>
-						<p>Type : {{ item.data.types.map((type: Types) => type.type.name).join(', ') }}</p>
+						<p>Type : {{ item.data.types.map((type: Type) => type.type.name).join(', ') }}</p>
 						<p>Weight : {{ item.data.weight / 10 }} kg</p>
 						<p>Height : {{ item.data.height / 10 }} m</p>
 						<p>Abilities : {{ item.data.abilities.map((ability: Abilities) => ability.ability.name).join(', ') }}</p>
 					</div>
 				</div>
+
 				<div class="card-rarity">
 					<span v-if="item.card && item.card?.rarity < 4">
 						<span v-for="n in item.card?.rarity + 1" :key="n">🔶</span>
