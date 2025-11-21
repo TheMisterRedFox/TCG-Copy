@@ -3,11 +3,13 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
+import { DROP_RATES } from '@/constants/dropRates';
 import type { Abilities, Types } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
 import type { PokemonJSON } from '@/interface/PokemonJSON';
 import { Card } from '@/models/card';
+import { pickRandomCard } from '@/utils/pickRandomCard';
 
 // ---------------------------------------------------------------
 // Data
@@ -30,8 +32,6 @@ const cutted = ref(false);
 // ---------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------
-const getRandomInt = (min: number, max: number): number =>
-	Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getRarityName = (rarity: number): string => {
 	switch (rarity) {
@@ -50,18 +50,17 @@ const getRarityName = (rarity: number): string => {
 	}
 };
 
-const pickRandomCard = (): Card => {
-	const roll = Math.random() * 100;
-	let rarity: number;
-	if (roll < 72.5) rarity = 0;
-	else if (roll < 92.5) rarity = 1;
-	else if (roll < 97.5) rarity = 2;
-	else if (roll < 99.6) rarity = 3;
-	else if (roll < 99.9) rarity = 4;
-	else rarity = 5;
-	const list = pokemonCards.filter((card) => card.rarity === rarity);
-	return list[getRandomInt(0, list.length - 1)]!;
-};
+// ---------------------------------------------------------------
+// Modal / affichage des taux de drop
+// ---------------------------------------------------------------
+const showDropRates = ref(false);
+
+// Tableau utilisé pour le modal
+const rarityTable = DROP_RATES.map((rate, index) => ({
+	rarity: index,
+	name: getRarityName(index),
+	rate,
+}));
 
 // ---------------------------------------------------------------
 // API fetch (PokéAPI or custom for Shrek)
@@ -141,6 +140,35 @@ onUnmounted(() => {
 </script>
 
 <template>
+	<!-- Bouton pour afficher le taux de drop -->
+	 <div class="controls">
+		<Button @click="showDropRates = !showDropRates">
+    		View drop rates
+  		</Button>
+	 </div>
+	
+	<!-- Modal / tableau des taux de drop -->
+    <div v-if="showDropRates" class="modal-overlay" @click.self="showDropRates = false">
+ 	   <div class="modal-content">
+ 		 <h3>Rare drop rates</h3>
+ 	     <table>
+ 	       <thead>
+ 	         <tr>
+ 	           <th>Rarity</th>
+ 	           <th>Rate (%)</th>
+ 	         </tr>
+ 	       </thead>
+ 	       <tbody>
+ 	         <tr v-for="r in rarityTable" :key="r.rarity">
+ 	           <td>{{ r.name === 'Shrek' ? '???' : r.name }}</td>
+ 	           <td>{{ r.rate }}%</td>
+ 	         </tr>
+ 	       </tbody>
+ 	     </table>
+ 	     <Button @click="showDropRates = false">Close</Button>
+ 	   </div>
+ 	 </div>
+
     <div class="opening-container">
         <div class="booster-container shrek" :class="{ cutted }">
             <div class="cut-container">
@@ -226,5 +254,57 @@ onUnmounted(() => {
 	margin-top: 15px;
 	display: flex;
 	justify-content: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+
+  	h3 {
+		padding-bottom: 15px;
+	}
+
+  table {
+	
+		width: 100%;
+		border-collapse: collapse;
+		padding-bottom: 15px;
+		margin-bottom: 15px;
+		th, td {
+			padding: 8px 12px;
+		}
+	
+		th {
+  			text-align: left;
+			padding-bottom: 10px;
+			border-top: 2px solid #333;
+			border-bottom: 2px solid #333;
+		}
+
+		td {
+			border-bottom: 1px solid #ccc;
+		}
+	}
 }
 </style>

@@ -1,13 +1,20 @@
 <script setup lang="ts"></script>
 
 <template>
-	<button @click="$emit('click')">
+	<button class="custom-button" v-bind="$attrs" v-on="$attrs">
 		<slot />
 	</button>
 </template>
 
+<script>
+export default {
+	name: "Button",
+	inheritAttrs: false, // Permet de mieux contrôler les attributs
+};
+</script>
+
 <style scoped>
-button {
+.custom-button {
 	display: inline-block;
 	outline: none;
 	cursor: pointer;
@@ -29,7 +36,8 @@ button {
 	background-color: transparent;
 	height: 48px;
 }
-button:hover {
+
+.custom-button:hover {
 	color: #fff;
 	background-color: #616467;
 }
