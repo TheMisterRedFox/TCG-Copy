@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
@@ -13,20 +13,23 @@ import { Card as CardModel } from '@/models/card';
 // ---------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------
-
 const typedPokemonList: PokemonJSON[] = pokemonList;
-const pokemonCards = typedPokemonList.map(
-	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
-);
-
+const pokemonCards = typedPokemonList.map((pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity));
+// Liste des cartes générées
 const generatedCards = ref<GeneratedCard[]>([]);
+
+// Indices des cartes "cliquées" ou "skippées"
+const clickedIndices = ref<number[]>([]);
+
+// Index de la carte actuellement sélectionnée
+const selectedIndex = ref(-1);
+
 const cutted = ref(false);
 
 // ---------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------
-const getRandomInt = (min: number, max: number): number =>
-	Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomInt = (min: number, max: number): number => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getRarityName = (rarity: number): string => {
 	switch (rarity) {
@@ -48,14 +51,12 @@ const getRarityName = (rarity: number): string => {
 const pickRandomCard = (): CardModel => {
 	const roll = Math.random() * 100;
 	let rarity: number;
-
 	if (roll < 72.5) rarity = 0;
 	else if (roll < 92.5) rarity = 1;
 	else if (roll < 97.5) rarity = 2;
 	else if (roll < 99.6) rarity = 3;
 	else if (roll < 99.9) rarity = 4;
 	else rarity = 5;
-
 	const list = pokemonCards.filter((card) => card.rarity === rarity);
 	return list[getRandomInt(0, list.length - 1)]!;
 };
@@ -83,7 +84,6 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			],
 		};
 	}
-
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
 	const data = await res.json();
@@ -99,12 +99,9 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 				name: moveData.name,
 				type: moveData.type.name,
 				power: moveData.power,
-				energy: Array.from(
-					{ length: Math.max(Math.ceil((moveData.power ?? 10) / 30), 1) },
-					() => '⚡',
-				),
+				energy: Array.from({ length: Math.max(Math.ceil((moveData.power ?? 10) / 30), 1) }, () => '⚡'),
 			};
-		}),
+		})
 	);
 
 	return { ...data, attacks };
@@ -115,19 +112,15 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 // ---------------------------------------------------------------
 const generateBooster = async (): Promise<void> => {
 	generatedCards.value = []; // clear old cards
-
 	const empty = Array.from({ length: 5 }, () => ({
 		loading: true,
 		card: null,
 		data: null,
 	}));
-
 	generatedCards.value = empty;
-
 	for (let i = 0; i < 5; i++) {
 		const card = pickRandomCard();
 		const data = await fetchPokemonData(card.id);
-
 		generatedCards.value[i] = {
 			loading: false,
 			card,
@@ -143,8 +136,32 @@ const cutBooster = (): void => {
 
 const redoBooster = (): void => {
 	cutted.value = false;
+	clickedIndices.value = [];
+	selectedIndex.value = 0;
 	generateBooster();
 };
+
+// ---------------------------------------------------------------
+// Keyboard navigation
+// ---------------------------------------------------------------
+const handleKeydown = (event: KeyboardEvent) => {
+	if (event.key === 'ArrowRight') {
+		if (selectedIndex.value < generatedCards.value.length) {
+			selectedIndex.value++;
+			if (!clickedIndices.value.includes(selectedIndex.value - 1)) {
+				clickedIndices.value.push(selectedIndex.value - 1);
+			}
+		}
+	}
+};
+
+onMounted(() => {
+	window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <template>
@@ -164,7 +181,14 @@ const redoBooster = (): void => {
 		</div>
 
 		<div class="cards-container">
-			<Card v-for="(item, index) in generatedCards" :key="index" :item="item" :getRarityName="getRarityName" />
+			<Card
+				v-for="(item, index) in generatedCards"
+				:key="index"
+				:index="index"
+				:item="item"
+				:clickedIndices="clickedIndices"
+				:selectedIndex="selectedIndex"
+			/>
 		</div>
 
 		<div class="controls">

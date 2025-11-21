@@ -5,8 +5,11 @@ import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 
-const { item } = defineProps<{
+const { index, item } = defineProps<{
+	index: number;
 	item: GeneratedCard;
+	clickedIndices: number[];
+	selectedIndex: number;
 }>();
 </script>
 
@@ -14,11 +17,17 @@ const { item } = defineProps<{
 	<div
 		class="card"
 		:class="[
-			item.clicked ? 'clicked' : '',
+			clickedIndices.includes(index) ? 'clicked' : '',
 			item.card ? `rarity-${item.card?.rarity}` : '',
 			item.card ? `type-${item.data?.types[0]?.type.name}` : '',
+			`index-${index}`,
 		]"
-		@click="item.clicked = true"
+		@click="
+			() => {
+				selectedIndex = index;
+				if (!clickedIndices.includes(index)) clickedIndices.push(index);
+			}
+		"
 	>
 		<div class="card-inner">
 			<!-- Header -->
