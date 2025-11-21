@@ -5,6 +5,7 @@ import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
+import CardRarity from '@/components/card/CardRarity.vue';
 import type { Ability, Type } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
@@ -168,13 +169,7 @@ const redoBooster = (): void => {
 					</div>
 				</div>
 
-				<div class="card-rarity">
-					<span v-if="item.card && item.card?.rarity < 4">
-						<span v-for="n in item.card?.rarity + 1" :key="n">🔶</span>
-					</span>
-					<span v-else-if="item.card?.rarity === 4"> 🌟 Legendary </span>
-					<span v-else-if="item.card?.rarity === 5"> 🤢 Shrek </span>
-				</div>
+				<CardRarity :v-if="!item.loading && item.card" :rarity="item.card?.rarity" />
 			</div>
 		</div>
 
