@@ -163,7 +163,7 @@ onUnmounted(() => {
                 :class="[
                     clickedIndices.includes(index) ? 'clicked' : '',
                     item.card ? `rarity-${item.card.rarity}` : '',
-                    item.card ? `type-${item.data.types[0].type.name}` : '',
+					item.card && item.data?.types[0] ? `type-${item.data.types[0].type.name}` : '',
                     `index-${index}`
                 ]"
                 @click="() => { 
@@ -184,12 +184,12 @@ onUnmounted(() => {
                         <img
                             v-else-if="item.data?.custom_image"
                             :src="item.data.custom_image"
-                            :alt="item.data.name"
+							:alt="item.data ? item.data.name : 'No image available'"
                         />
                         <img
                             v-else
-                            :src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card.id).padStart(3, '0')}.png`"
-                            :alt="item.data.name"
+							:src="item.card ? `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card.id).padStart(3, '0')}.png` : ''"
+                            :alt="item.data ? item.data.name : 'No image available'"
                         />
                     </div>
                     <!-- Body -->
