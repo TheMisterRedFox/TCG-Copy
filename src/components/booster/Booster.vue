@@ -5,7 +5,7 @@ import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
-import type { Type } from '@/interface/GeneralType';
+import type { Ability, Type } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
 import type { PokemonJSON } from '@/interface/PokemonJSON';
@@ -155,7 +155,7 @@ const redoBooster = (): void => {
 						:v-if="!item.loading && item.card"
 						:id="item.card?.id"
 						:name="item.card?.name"
-						:image="item.data?.custom_image || null"
+						:image="item.data?.custom_image"
 					/>
 
 					<!-- Body -->
@@ -164,7 +164,7 @@ const redoBooster = (): void => {
 						<p>Type : {{ item.data.types.map((type: Type) => type.type.name).join(', ') }}</p>
 						<p>Weight : {{ item.data.weight / 10 }} kg</p>
 						<p>Height : {{ item.data.height / 10 }} m</p>
-						<p>Abilities : {{ item.data.abilities.map((ability: Abilities) => ability.ability.name).join(', ') }}</p>
+						<p>Abilities : {{ item.data.abilities.map((ability: Ability) => ability.ability.name).join(', ') }}</p>
 					</div>
 				</div>
 
