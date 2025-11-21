@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
+import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
+import Button from '@/components/button/Button.vue';
 import type { Abilities, Types } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
@@ -68,8 +70,7 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
 		return {
 			name: 'Shrek',
-			custom_image:
-				'https://www.123-stickers.com/6071-thickbox/sticker-shrek.jpg',
+			custom_image: ShrekImage,
 			types: [{ type: { name: 'ground' } }],
 			weight: 1500,
 			height: 20,
@@ -103,8 +104,13 @@ const generateBooster = async (): Promise<void> => {
 	}
 };
 
-const cutBooster = () => {
+const cutBooster = (): void => {
 	cutted.value = true;
+	generateBooster();
+};
+
+const redoBooster = (): void => {
+	cutted.value = false;
 	generateBooster();
 };
 
@@ -201,6 +207,10 @@ onUnmounted(() => {
                 </div>
             </div>
         </div>
+
+		<div class="controls">
+			<Button @click="redoBooster">Redo Booster</Button>
+		</div>
     </div>
 </template>
 
@@ -208,4 +218,10 @@ onUnmounted(() => {
 /* Reuse your existing CSS */
 @import './Booster.less';
 @import '../card/Card.less';
+
+.controls {
+	margin-top: 15px;
+	display: flex;
+	justify-content: center;
+}
 </style>
