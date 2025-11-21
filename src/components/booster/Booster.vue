@@ -4,6 +4,7 @@ import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
 import Card from '@/components/card/Card.vue';
+import type { Attack, Move } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
 import type { PokemonJSON } from '@/interface/PokemonJSON';
@@ -71,13 +72,42 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			weight: 1500,
 			height: 20,
 			abilities: [{ ability: { name: 'swamp-smash' } }],
-			moves: [{ move: { name: 'onion-throw' } }],
+			moves: [{ move: { name: 'onion-throw', url: '' } }],
+			attacks: [
+				{
+					name: 'Onion Throw',
+					type: 'ground',
+					power: 50,
+					energy: ['colorless', 'colorless'],
+				},
+			],
 		};
 	}
 
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
-	return res.json();
+	const data = await res.json();
+
+	// Pick first 2 moves for attacks
+	const moves = data.moves.slice(0, 2);
+
+	const attacks: Attack[] = await Promise.all(
+		moves.map(async (move: Move) => {
+			const moveRes = await fetch(move.move.url);
+			const moveData = await moveRes.json();
+			return {
+				name: moveData.name,
+				type: moveData.type.name,
+				power: moveData.power,
+				energy: Array.from(
+					{ length: Math.max(Math.ceil((moveData.power ?? 10) / 30), 1) },
+					() => '⚡',
+				),
+			};
+		}),
+	);
+
+	return { ...data, attacks };
 };
 
 // ---------------------------------------------------------------

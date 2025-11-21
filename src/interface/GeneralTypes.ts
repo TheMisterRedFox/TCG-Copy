@@ -7,5 +7,15 @@ export interface Ability {
 }
 
 export interface Move {
-	move: { name: string };
+	move: {
+		name: string;
+		url: string;
+	};
+}
+
+export interface Attack {
+	name: string;
+	type: string;
+	power: number | null;
+	energy: string[];
 }

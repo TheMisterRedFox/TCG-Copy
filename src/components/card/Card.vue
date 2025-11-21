@@ -1,13 +1,12 @@
 <script setup lang="ts">
+import CardAttack from '@/components/card/CardAttack.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
-import type { Ability, Type } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 
-const { item, getRarityName } = defineProps<{
+const { item } = defineProps<{
 	item: GeneratedCard;
-	getRarityName: (rarity: number) => string;
 }>();
 </script>
 
@@ -35,11 +34,7 @@ const { item, getRarityName } = defineProps<{
 
 			<!-- Body -->
 			<div class="card-body" v-if="!item.loading && item.data">
-				<p>Rarity : {{ getRarityName(item.card?.rarity ?? 0) }}</p>
-				<p>Type : {{ item.data.types.map((t: Type) => t.type.name).join(', ') }}</p>
-				<p>Weight : {{ item.data.weight / 10 }} kg</p>
-				<p>Height : {{ item.data.height / 10 }} m</p>
-				<p>Abilities : {{ item.data.abilities.map((a: Ability) => a.ability.name).join(', ') }}</p>
+				<CardAttack v-for="(attack, index) in item.data.attacks" :key="index" :attack="attack" />
 			</div>
 		</div>
 
