@@ -7,12 +7,9 @@ const { id, name, image } = defineProps<{
 </script>
 
 <template>
-	<!-- Illustration -->
+	<!-- Card Image -->
 	<div class="card-illustration">
-		<!-- If a custom image is provided -->
 		<img v-if="image" :src="image" :alt="name" />
-
-		<!-- Otherwise, fallback to the official pokedex image -->
 		<img
 			v-else
 			:src="`https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(id).padStart(3, '0')}.png`"
