@@ -14,7 +14,9 @@ import { Card as CardModel } from '@/models/card';
 // Data
 // ---------------------------------------------------------------
 const typedPokemonList: PokemonJSON[] = pokemonList;
-const pokemonCards = typedPokemonList.map((pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity));
+const pokemonCards = typedPokemonList.map(
+	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
+);
 // Liste des cartes générées
 const generatedCards = ref<GeneratedCard[]>([]);
 
@@ -29,7 +31,8 @@ const cutted = ref(false);
 // ---------------------------------------------------------------
 // Helper functions
 // ---------------------------------------------------------------
-const getRandomInt = (min: number, max: number): number => Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandomInt = (min: number, max: number): number =>
+	Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getRarityName = (rarity: number): string => {
 	switch (rarity) {
@@ -99,9 +102,12 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 				name: moveData.name,
 				type: moveData.type.name,
 				power: moveData.power,
-				energy: Array.from({ length: Math.max(Math.ceil((moveData.power ?? 10) / 30), 1) }, () => '⚡'),
+				energy: Array.from(
+					{ length: Math.max(Math.ceil((moveData.power ?? 10) / 30), 1) },
+					() => '⚡',
+				),
 			};
-		})
+		}),
 	);
 
 	return { ...data, attacks };
@@ -155,6 +161,12 @@ const handleKeydown = (event: KeyboardEvent) => {
 	}
 };
 
+const onCardClicked = (index: number): void => {
+	if (!clickedIndices.value.includes(index)) {
+		clickedIndices.value.push(index);
+	}
+};
+
 onMounted(() => {
 	window.addEventListener('keydown', handleKeydown);
 });
@@ -188,6 +200,8 @@ onUnmounted(() => {
 				:item="item"
 				:clickedIndices="clickedIndices"
 				:selectedIndex="selectedIndex"
+				@select="selectedIndex = $event"
+				@clickCard="onCardClicked"
 			/>
 		</div>
 

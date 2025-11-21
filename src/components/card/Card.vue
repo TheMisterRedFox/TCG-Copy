@@ -11,6 +11,11 @@ const { index, item } = defineProps<{
 	clickedIndices: number[];
 	selectedIndex: number;
 }>();
+
+const emit = defineEmits<{
+	(e: 'select', index: number): void;
+	(e: 'clickCard', index: number): void;
+}>();
 </script>
 
 <template>
@@ -24,8 +29,8 @@ const { index, item } = defineProps<{
 		]"
 		@click="
 			() => {
-				selectedIndex = index;
-				if (!clickedIndices.includes(index)) clickedIndices.push(index);
+				emit('select', index);
+				emit('clickCard', index);
 			}
 		"
 	>
