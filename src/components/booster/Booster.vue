@@ -3,14 +3,11 @@ import { ref } from 'vue';
 import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
-import CardHeader from '@/components/card/CardHeader.vue';
-import CardImage from '@/components/card/CardImage.vue';
-import CardRarity from '@/components/card/CardRarity.vue';
-import type { Ability, Type } from '@/interface/GeneralTypes';
+import Card from '@/components/card/Card.vue';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
 import type { PokemonJSON } from '@/interface/PokemonJSON';
-import { Card } from '@/models/card';
+import { Card as CardModel } from '@/models/card';
 
 // ---------------------------------------------------------------
 // Data
@@ -18,7 +15,7 @@ import { Card } from '@/models/card';
 
 const typedPokemonList: PokemonJSON[] = pokemonList;
 const pokemonCards = typedPokemonList.map(
-	(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
+	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
 );
 
 const generatedCards = ref<GeneratedCard[]>([]);
@@ -47,7 +44,7 @@ const getRarityName = (rarity: number): string => {
 	}
 };
 
-const pickRandomCard = (): Card => {
+const pickRandomCard = (): CardModel => {
 	const roll = Math.random() * 100;
 	let rarity: number;
 
@@ -137,40 +134,7 @@ const redoBooster = (): void => {
 		</div>
 
 		<div class="cards-container">
-			<div
-				v-for="(item, index) in generatedCards"
-				:key="index"
-				class="card"
-				:class="[
-					item.clicked ? 'clicked' : '',
-					item.card ? `rarity-${item.card?.rarity}` : '',
-					item.card ? `type-${item.data?.types[0]?.type.name}` : '',
-				]"
-				@click="item.clicked = true"
-			>
-				<!-- Header -->
-				<div class="card-inner">
-					<CardHeader :v-if="!item.loading && item.card" :name="item.card?.name" />
-
-					<CardImage
-						:v-if="!item.loading && item.card"
-						:id="item.card?.id"
-						:name="item.card?.name"
-						:image="item.data?.custom_image"
-					/>
-
-					<!-- Body -->
-					<div class="card-body" v-if="!item.loading && item.data">
-						<p>Rarity : {{ getRarityName(item.card?.rarity ?? 0) }}</p>
-						<p>Type : {{ item.data.types.map((type: Type) => type.type.name).join(', ') }}</p>
-						<p>Weight : {{ item.data.weight / 10 }} kg</p>
-						<p>Height : {{ item.data.height / 10 }} m</p>
-						<p>Abilities : {{ item.data.abilities.map((ability: Ability) => ability.ability.name).join(', ') }}</p>
-					</div>
-				</div>
-
-				<CardRarity :v-if="!item.loading && item.card" :rarity="item.card?.rarity" />
-			</div>
+			<Card v-for="(item, index) in generatedCards" :key="index" :item="item" :getRarityName="getRarityName" />
 		</div>
 
 		<div class="controls">
