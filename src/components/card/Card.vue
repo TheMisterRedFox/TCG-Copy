@@ -5,7 +5,7 @@ import CardRarity from '@/components/card/CardRarity.vue';
 import type { Ability, Type } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 
-const props = defineProps<{
+const { item, getRarityName } = defineProps<{
 	item: GeneratedCard;
 	getRarityName: (rarity: number) => string;
 }>();
@@ -15,36 +15,36 @@ const props = defineProps<{
 	<div
 		class="card"
 		:class="[
-			props.item.clicked ? 'clicked' : '',
-			props.item.card ? `rarity-${props.item.card?.rarity}` : '',
-			props.item.card ? `type-${props.item.data?.types[0]?.type.name}` : '',
+			item.clicked ? 'clicked' : '',
+			item.card ? `rarity-${item.card?.rarity}` : '',
+			item.card ? `type-${item.data?.types[0]?.type.name}` : '',
 		]"
-		@click="props.item.clicked = true"
+		@click="item.clicked = true"
 	>
 		<div class="card-inner">
 			<!-- Header -->
-			<CardHeader v-if="!props.item.loading && props.item.card" :name="props.item.card?.name" />
+			<CardHeader v-if="!item.loading && item.card" :name="item.card?.name" />
 
 			<!-- Image -->
 			<CardImage
-				v-if="!props.item.loading && props.item.card"
-				:id="props.item.card?.id"
-				:name="props.item.card?.name"
-				:image="props.item.data?.custom_image"
+				v-if="!item.loading && item.card"
+				:id="item.card?.id"
+				:name="item.card?.name"
+				:image="item.data?.custom_image"
 			/>
 
 			<!-- Body -->
-			<div class="card-body" v-if="!props.item.loading && props.item.data">
-				<p>Rarity : {{ getRarityName(props.item.card?.rarity ?? 0) }}</p>
-				<p>Type : {{ props.item.data.types.map((t: Type) => t.type.name).join(', ') }}</p>
-				<p>Weight : {{ props.item.data.weight / 10 }} kg</p>
-				<p>Height : {{ props.item.data.height / 10 }} m</p>
-				<p>Abilities : {{ props.item.data.abilities.map((a: Ability) => a.ability.name).join(', ') }}</p>
+			<div class="card-body" v-if="!item.loading && item.data">
+				<p>Rarity : {{ getRarityName(item.card?.rarity ?? 0) }}</p>
+				<p>Type : {{ item.data.types.map((t: Type) => t.type.name).join(', ') }}</p>
+				<p>Weight : {{ item.data.weight / 10 }} kg</p>
+				<p>Height : {{ item.data.height / 10 }} m</p>
+				<p>Abilities : {{ item.data.abilities.map((a: Ability) => a.ability.name).join(', ') }}</p>
 			</div>
 		</div>
 
 		<!-- Rarity icon -->
-		<CardRarity v-if="!props.item.loading && props.item.card" :rarity="props.item.card?.rarity" />
+		<CardRarity v-if="!item.loading && item.card" :rarity="item.card?.rarity" />
 	</div>
 </template>
 
