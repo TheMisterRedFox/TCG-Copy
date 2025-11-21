@@ -140,7 +140,7 @@ const redoBooster = (): void => {
  	         </tr>
  	       </tbody>
  	     </table>
- 	     <Button @click="showDropRates = false">Fermer</Button>
+ 	     <Button @click="showDropRates = false">Close</Button>
  	   </div>
  	 </div>
 
