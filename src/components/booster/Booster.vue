@@ -111,6 +111,9 @@ const cutBooster = (): void => {
 
 const redoBooster = (): void => {
 	cutted.value = false;
+	clickedIndices.value = [];
+	selectedIndex.value = 0;
+	console.log(selectedIndex.value);
 	generateBooster();
 };
 
