@@ -185,7 +185,8 @@
      * Cartes spéciales
      */
 
-    &.rarity-4 {
+    &.rarity-4,
+    &.rarity-5 {
         color: white;
         text-shadow: 0 0 5px black;
 
@@ -205,6 +206,20 @@
             .card-body {
                 position: absolute;
                 z-index: 10;
+            }
+        }
+    }
+
+    // CHARIZARD - 6
+    &.card-0 {
+        .card-inner {
+            background: linear-gradient(45deg, #965a00 0%, #50ca0a 85%) !important;
+
+            .card-illustration img {
+                height: 500px;
+                position: absolute;
+                top: -25px;
+                right: -113px;
             }
         }
     }
