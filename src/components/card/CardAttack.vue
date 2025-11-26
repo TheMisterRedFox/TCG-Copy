@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { Attack } from '@/interface/GeneralTypes';
 import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
-import { computed } from 'vue';
 
 const { attack } = defineProps<{
 	attack: Attack;
