@@ -7,7 +7,6 @@ const { attack } = defineProps<{
 </script>
 
 <template>
-	<!-- Card Attack -->
 	<div class="attack" role="listitem">
 		<span class="attack-name">{{ attack.name }}</span> - {{ attack.power ?? '?' }} dmg
 		<span class="energy" v-for="(energy, i) in attack.energy" :key="i">{{ energy }}</span>

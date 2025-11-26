@@ -5,7 +5,6 @@ const { name } = defineProps<{
 </script>
 
 <template>
-	<!-- Card Header -->
 	<div class="card-header">
 		<p class="card-name">
 			{{ name || 'Loading…' }}
