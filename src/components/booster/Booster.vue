@@ -54,7 +54,11 @@ const getRarityName = (rarity: number): string => {
 const pickRandomCard = (): CardModel => {
 	const roll = Math.random() * 100;
 	let rarity: number;
-	if (roll < 50) rarity = 4;
+	if (roll < 72.5) rarity = 0;
+	else if (roll < 92.5) rarity = 1;
+	else if (roll < 97.5) rarity = 2;
+	else if (roll < 99.6) rarity = 3;
+	else if (roll < 99.9) rarity = 4;
 	else rarity = 5;
 	const list = pokemonCards.filter((card) => card.rarity === rarity);
 	return list[getRandomInt(0, list.length - 1)]!;
