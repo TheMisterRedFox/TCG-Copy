@@ -4,6 +4,7 @@ import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
+import CardType from './CardType.vue';
 
 const { index, item } = defineProps<{
 	index: number;
@@ -37,7 +38,9 @@ const emit = defineEmits<{
 	>
 		<div class="card-inner">
 			<!-- Header -->
-			<CardHeader v-if="!item.loading && item.card" :name="item.card?.name" />
+			<CardHeader v-if="!item.loading && item.card" :name="item.card?.name">
+				<CardType :type="item.data?.types[0]?.type.name" />
+			</CardHeader>
 
 			<!-- Image -->
 			<CardImage
