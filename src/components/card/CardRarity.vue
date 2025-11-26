@@ -10,8 +10,8 @@ const { rarity } = defineProps<{
 		<span v-else-if="rarity < 4">
 			<span v-for="n in rarity + 1" :key="n">🔶</span>
 		</span>
-		<span v-else-if="rarity === 4"> 🌟 Legendary </span>
-		<span v-else-if="rarity === 5"> 🤢 Shrek </span>
+		<span v-else-if="rarity === 4">🌟</span>
+		<span v-else-if="rarity === 5"> 🤢</span>
 	</div>
 </template>
 
