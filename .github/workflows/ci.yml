@@ -75,7 +75,7 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm run test:unit -- --coverage
+        run: npm run test:unit:coverage
 
       - name: List coverage folder
         run: ls -R coverage
