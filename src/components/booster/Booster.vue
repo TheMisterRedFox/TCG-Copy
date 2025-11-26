@@ -3,18 +3,19 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
-import type { Abilities, Types } from '@/interface/GeneralTypes';
+import Card from '@/components/card/Card.vue';
+import type { Attack, Move } from '@/interface/GeneralTypes';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 import type { PokemonAPIData } from '@/interface/PokemonAPIData';
 import type { PokemonJSON } from '@/interface/PokemonJSON';
-import { Card } from '@/models/card';
+import { Card as CardModel } from '@/models/card';
 
 // ---------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------
 const typedPokemonList: PokemonJSON[] = pokemonList;
 const pokemonCards = typedPokemonList.map(
-	(pokemon) => new Card(pokemon.id, pokemon.name, pokemon.rarity),
+	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
 );
 // Liste des cartes générées
 const generatedCards = ref<GeneratedCard[]>([]);
@@ -50,7 +51,7 @@ const getRarityName = (rarity: number): string => {
 	}
 };
 
-const pickRandomCard = (): Card => {
+const pickRandomCard = (): CardModel => {
 	const roll = Math.random() * 100;
 	let rarity: number;
 	if (roll < 72.5) rarity = 0;
@@ -75,11 +76,41 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			weight: 1500,
 			height: 20,
 			abilities: [{ ability: { name: 'swamp-smash' } }],
+			moves: [{ move: { name: 'onion-throw', url: '' } }],
+			attacks: [
+				{
+					name: 'Onion Throw',
+					type: 'ground',
+					power: 50,
+					energy: ['colorless', 'colorless'],
+				},
+			],
 		};
 	}
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
-	return res.json();
+	const data = await res.json();
+
+	// Pick first 2 moves for attacks
+	const moves = data.moves.slice(0, 2);
+
+	const attacks: Attack[] = await Promise.all(
+		moves.map(async (move: Move) => {
+			const moveRes = await fetch(move.move.url);
+			const moveData = await moveRes.json();
+			return {
+				name: moveData.name,
+				type: moveData.type.name,
+				power: moveData.power,
+				energy: Array.from(
+					{ length: Math.max(Math.ceil((moveData.power ?? 10) / 30), 1) },
+					() => '⚡',
+				),
+			};
+		}),
+	);
+
+	return { ...data, attacks };
 };
 
 // ---------------------------------------------------------------
@@ -113,7 +144,6 @@ const redoBooster = (): void => {
 	cutted.value = false;
 	clickedIndices.value = [];
 	selectedIndex.value = 0;
-	console.log(selectedIndex.value);
 	generateBooster();
 };
 
@@ -131,6 +161,12 @@ const handleKeydown = (event: KeyboardEvent) => {
 	}
 };
 
+const onCardClicked = (index: number): void => {
+	if (!clickedIndices.value.includes(index)) {
+		clickedIndices.value.push(index);
+	}
+};
+
 onMounted(() => {
 	window.addEventListener('keydown', handleKeydown);
 });
@@ -141,81 +177,38 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="opening-container">
-        <div class="booster-container shrek" :class="{ cutted }">
-            <div class="cut-container">
-                <div class="top-border"></div>
-                <div class="cut-line" @click="cutBooster"></div>
-            </div>
-            <div class="uncutting-container">
-                <div class="center-body">
-                    <div class="cover"></div>
-                    <div class="shadow"></div>
-                </div>
-                <div class="bottom-border"></div>
-            </div>
-        </div>
-        <div class="cards-container">
-            <div
-                v-for="(item, index) in generatedCards"
-                :key="index"
-                class="card"
-                :class="[
-                    clickedIndices.includes(index) ? 'clicked' : '',
-                    item.card ? `rarity-${item.card.rarity}` : '',
-                    item.card && item.data?.types[0] ? `type-${item.data.types[0].type.name}` : '',
-                    item.card ? `card-${item.card.id}` : '',
-                    `index-${index}`
-                ]"
-                @click="() => { 
-                    selectedIndex = index; 
-                    if (!clickedIndices.includes(index)) clickedIndices.push(index); 
-                }"
-            >
-                <!-- Header -->
-                <div class="card-inner">
-                    <div class="card-header">
-                        <p class="card-name">
-                            {{ item.card?.name || 'Loading…' }}
-                        </p>
-                    </div>
-                    <!-- Illustration -->
-                    <div class="card-illustration">
-                        <div v-if="item.loading">Loading…</div>
-                        <img
-                            v-else-if="item.data?.custom_image"
-                            :src="item.data.custom_image"
-							:alt="item.data ? item.data.name : 'No image available'"
-                        />
-                        <img
-                            v-else
-							:src="item.card ? `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${String(item.card.id).padStart(3, '0')}.png` : ''"
-                            :alt="item.data ? item.data.name : 'No image available'"
-                        />
-                    </div>
-                    <!-- Body -->
-                    <div class="card-body" v-if="!item.loading && item.data">
-                        <p>Rarity : {{ getRarityName(item.card?.rarity ?? 0) }}</p>
-                        <p>Type : {{ item.data.types.map((type) => type.type.name).join(', ') }}</p>
-                        <p>Weight : {{ item.data.weight / 10 }} kg</p>
-                        <p>Height : {{ item.data.height / 10 }} m</p>
-                        <p>Abilities : {{ item.data.abilities.map((ability) => ability.ability.name).join(', ') }}</p>
-                    </div>
-                </div>
-                <div class="card-rarity">
-                    <span v-if="item.card && item.card.rarity < 4">
-                        <span v-for="n in item.card.rarity + 1" :key="n">🔶</span>
-                    </span>
-                    <span v-else-if="item.card?.rarity === 4"> 🌟 Legendary </span>
-                    <span v-else-if="item.card?.rarity === 5"> 🤢 Shrek </span>
-                </div>
-            </div>
-        </div>
+	<div class="opening-container">
+		<div class="booster-container shrek" :class="{ cutted }">
+			<div class="cut-container">
+				<div class="top-border"></div>
+				<div class="cut-line" @click="cutBooster"></div>
+			</div>
+			<div class="uncutting-container">
+				<div class="center-body">
+					<div class="cover"></div>
+					<div class="shadow"></div>
+				</div>
+				<div class="bottom-border"></div>
+			</div>
+		</div>
+
+		<div class="cards-container">
+			<Card
+				v-for="(item, index) in generatedCards"
+				:key="index"
+				:index="index"
+				:item="item"
+				:clickedIndices="clickedIndices"
+				:selectedIndex="selectedIndex"
+				@select="selectedIndex = $event"
+				@clickCard="onCardClicked"
+			/>
+		</div>
 
 		<div class="controls">
 			<Button @click="redoBooster">Redo Booster</Button>
 		</div>
-    </div>
+	</div>
 </template>
 
 <style scoped>
