@@ -24,7 +24,8 @@ const emit = defineEmits<{
 		:class="[
 			clickedIndices.includes(index) ? 'clicked' : '',
 			item.card ? `rarity-${item.card?.rarity}` : '',
-			item.card ? `type-${item.data?.types[0]?.type.name}` : '',
+			item.card && item.data?.types[0] ? `type-${item.data.types[0].type.name}` : '',
+            item.card ? `card-${item.card.id}` : '',
 			`index-${index}`,
 		]"
 		@click="
