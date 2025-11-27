@@ -1,4 +1,4 @@
-import type { Ability, Attack, Move, Type } from './GeneralTypes';
+import type { Ability, Attack, Move, Stat, Type } from './GeneralTypes';
 
 export interface PokemonAPIData {
 	name: string;
@@ -9,4 +9,5 @@ export interface PokemonAPIData {
 	abilities: Ability[];
 	moves: Move[];
 	attacks?: Attack[];
+	stats: Stat[];
 }
