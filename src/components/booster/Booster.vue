@@ -172,17 +172,21 @@ const handleKeydown = (event: KeyboardEvent) => {
 			if (selectedIndex.value === generatedCards.value.length) {
 				allCardsClicked.value = true;
 			}
-		} 
+		}
 	}
-	if (event.key === 'ArrowLeft' && cutted.value === true && selectedIndex.value < 4) {
-        isPreviewing.value = true; // Activer le mode "preview"
-    }
+	if (
+		event.key === 'ArrowLeft' &&
+		cutted.value === true &&
+		selectedIndex.value < 4
+	) {
+		isPreviewing.value = true; // Activer le mode "preview"
+	}
 };
 
 const handleKeyup = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowLeft') {
-        isPreviewing.value = false; // Désactiver le mode "preview"
-    }
+	if (event.key === 'ArrowLeft') {
+		isPreviewing.value = false; // Désactiver le mode "preview"
+	}
 };
 
 const onCardClicked = (index: number): void => {
@@ -190,19 +194,19 @@ const onCardClicked = (index: number): void => {
 		clickedIndices.value.push(index);
 	}
 
-	if(index === BOOSTER_LENGTH-1) {
+	if (index === BOOSTER_LENGTH - 1) {
 		allCardsClicked.value = true;
 	}
 };
 
 onMounted(() => {
-    window.addEventListener('keydown', handleKeydown);
-    window.addEventListener('keyup', handleKeyup);
+	window.addEventListener('keydown', handleKeydown);
+	window.addEventListener('keyup', handleKeyup);
 });
 
 onUnmounted(() => {
-    window.removeEventListener('keydown', handleKeydown);
-    window.removeEventListener('keyup', handleKeyup);
+	window.removeEventListener('keydown', handleKeydown);
+	window.removeEventListener('keyup', handleKeyup);
 });
 </script>
 
