@@ -4,10 +4,10 @@ import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
 import Card from '@/components/card/Card.vue';
-import type { Attack, Move } from '@/interface/GeneralTypes';
-import type { GeneratedCard } from '@/interface/GeneratedCard';
-import type { PokemonAPIData } from '@/interface/PokemonAPIData';
-import type { PokemonJSON } from '@/interface/PokemonJSON';
+import type { Attack, Move } from '@/interfaces/GeneralTypes';
+import type { GeneratedCard } from '@/interfaces/GeneratedCard';
+import type { PokemonAPIData } from '@/interfaces/PokemonAPIData';
+import type { PokemonJSON } from '@/interfaces/PokemonJSON';
 import { Card as CardModel } from '@/models/card';
 
 // ---------------------------------------------------------------

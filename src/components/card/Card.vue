@@ -4,7 +4,7 @@ import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import CardType from '@/components/card/CardType.vue';
-import type { GeneratedCard } from '@/interface/GeneratedCard';
+import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 
 const { index, item } = defineProps<{
 	index: number;

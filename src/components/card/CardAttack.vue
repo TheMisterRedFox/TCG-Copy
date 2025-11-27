@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useEnergyIcon } from '@/composables/useEnergyIcon';
-import type { Attack } from '@/interface/GeneralTypes';
+import type { Attack } from '@/interfaces/GeneralTypes';
 
 /**
  * Props
