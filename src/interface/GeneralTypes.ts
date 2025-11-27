@@ -19,3 +19,8 @@ export interface Attack {
 	power: number | null;
 	energy: string[];
 }
+
+export interface Stat {
+	base_stat: number;
+	stat: { name: string };
+}

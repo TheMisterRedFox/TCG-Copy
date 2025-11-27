@@ -39,7 +39,7 @@ const emit = defineEmits<{
 		<div class="card-inner">
 			<!-- Header -->
 			<CardHeader v-if="!item.loading && item.card" :name="item.card?.name">
-				<CardType :type="item.data?.types[0]?.type.name" />
+				<CardType :hp="item.data?.stats[0]?.base_stat" :type="item.data?.types[0]?.type.name" />
 			</CardHeader>
 
 			<!-- Image -->

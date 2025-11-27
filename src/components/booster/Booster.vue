@@ -85,8 +85,10 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 					energy: ['colorless', 'colorless'],
 				},
 			],
+			stats: [{ base_stat: 180, stat: { name: 'hp' } }],
 		};
 	}
+
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
 	const data = await res.json();
