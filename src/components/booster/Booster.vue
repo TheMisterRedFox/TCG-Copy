@@ -14,63 +14,46 @@ import { Card as CardModel } from '@/models/card';
 // Data
 // ---------------------------------------------------------------
 const BOOSTER_LENGTH = 5;
+
 const typedPokemonList: PokemonJSON[] = pokemonList;
+
 const pokemonCards = typedPokemonList.map(
 	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
 );
-// Liste des cartes générées
+
+// Cards generated in the booster
 const generatedCards = ref<GeneratedCard[]>([]);
 
-// Indices des cartes "cliquées" ou "skippées"
+// Navigation and state tracking
 const clickedIndices = ref<number[]>([]);
-
-// Index de la carte actuellement sélectionnée
 const selectedIndex = ref(0);
-
 const cutted = ref(false);
-
 const isPreviewing = ref(false);
-
 const allCardsClicked = ref(false);
 
 // ---------------------------------------------------------------
-// Helper functions
+// Helpers
 // ---------------------------------------------------------------
 const getRandomInt = (min: number, max: number): number =>
 	Math.floor(Math.random() * (max - min + 1)) + min;
 
-const getRarityName = (rarity: number): string => {
-	switch (rarity) {
-		case 0:
-			return 'Common';
-		case 1:
-			return 'Uncommon';
-		case 2:
-			return 'Rare';
-		case 3:
-			return 'Very Rare';
-		case 4:
-			return 'Legendary';
-		default:
-			return 'Shrek';
-	}
-};
-
 const pickRandomCard = (): CardModel => {
 	const roll = Math.random() * 100;
 	let rarity: number;
+
 	if (roll < 72.5) rarity = 0;
 	else if (roll < 92.5) rarity = 1;
 	else if (roll < 97.5) rarity = 2;
 	else if (roll < 99.6) rarity = 3;
 	else if (roll < 99.9) rarity = 4;
 	else rarity = 5;
+
 	const list = pokemonCards.filter((card) => card.rarity === rarity);
 	return list[getRandomInt(0, list.length - 1)]!;
 };
 
 // ---------------------------------------------------------------
-// API fetch (PokéAPI or custom for Shrek)
+// API Fetch
 // ---------------------------------------------------------------
 const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
@@ -105,6 +88,7 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 		moves.map(async (move: Move) => {
 			const moveRes = await fetch(move.move.url);
 			const moveData = await moveRes.json();
+
 			return {
 				name: moveData.name,
 				type: moveData.type.name,
@@ -131,9 +115,11 @@ const generateBooster = async (): Promise<void> => {
 		data: null,
 	}));
 	generatedCards.value = empty;
+
 	for (let i = 0; i < BOOSTER_LENGTH; i++) {
 		const card = pickRandomCard();
 		const data = await fetchPokemonData(card.id);
+
 		generatedCards.value[i] = {
 			loading: false,
 			card,
@@ -179,13 +165,13 @@ const handleKeydown = (event: KeyboardEvent) => {
 		cutted.value === true &&
 		selectedIndex.value < 4
 	) {
-		isPreviewing.value = true; // Activer le mode "preview"
+		isPreviewing.value = true;
 	}
 };
 
 const handleKeyup = (event: KeyboardEvent) => {
 	if (event.key === 'ArrowLeft') {
-		isPreviewing.value = false; // Désactiver le mode "preview"
+		isPreviewing.value = false;
 	}
 };
 
