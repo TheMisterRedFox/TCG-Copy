@@ -84,6 +84,32 @@
         position: absolute;
         z-index: 100;
         top: @card-container-absolute-top-position;
+
+        &.preview {
+            .card {
+
+                &:nth-child(1):not(.clicked) {
+                    transform: translateX(0px);
+                }
+
+                &:nth-child(2):not(.clicked) {
+                    transform: translateX(-10px);
+                }
+
+                &:nth-child(3):not(.clicked) {
+                    transform: translateX(-20px);
+                }
+
+                &:nth-child(4):not(.clicked) {
+                    transform: translateX(-30px);
+                }
+
+                &:nth-child(5):not(.clicked) {
+                    transform: translateX(-40px);
+                }
+
+            }
+        }
     }
 
     .booster-container.cutted {
@@ -92,5 +118,11 @@
         .cut-container {
             animation: throw-to-top-right 1s ease-in-out forwards;
         }
+    }
+}
+
+.booster-button {
+    img {
+        height: 50px;
     }
 }
