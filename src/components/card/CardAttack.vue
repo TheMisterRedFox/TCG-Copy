@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { useEnergyIcon } from '@/composables/useEnergyIcon';
 import type { Attack } from '@/interface/GeneralTypes';
-import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
 
 /**
  * Props
@@ -11,27 +10,7 @@ const { attack } = defineProps<{
 	attack: Attack;
 }>();
 
-/**
- * Computes the style for the type icon based on the Pokémon type
- * - Calls `pokemonTypeTransform` to normalize the type (e.g. "Bird" → "normal")
- * - Builds the final image URL from `/public/img/energy/...`
- * - Ensures consistent size, border and rendering of the icon
- * @returns {Record<string, string>} The inline style object for <i class="type-icon" />
- */
-const iconStyle = computed(() => {
-	const transformedType = pokemonTypeTransform(attack.type || '');
-
-	return {
-		width: '15px',
-		height: '15px',
-		border: '1px solid #ffff',
-		marginRight: '1px',
-		borderRadius: '25px',
-		backgroundSize: 'contain',
-		backgroundRepeat: 'no-repeat',
-		backgroundImage: `url('/img/energy/${transformedType}-energy.png')`,
-	};
-});
+const { iconStyle } = useEnergyIcon(attack.type, { width: 15, height: 15 });
 </script>
 
 <template>
@@ -72,6 +51,7 @@ const iconStyle = computed(() => {
 .type-icon {
 	display: inline-block;
 	vertical-align: middle;
+	margin-right: 1px;
 }
 
 .attack-type-container {
