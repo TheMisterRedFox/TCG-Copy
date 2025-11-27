@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import CardAttack from '@/components/card/CardAttack.vue';
+import CardFooter from '@/components/card/CardFooter.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
+import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
+import CardWeakness from '@/components/card/CardWeakness.vue';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 
 const { index, item } = defineProps<{
@@ -54,6 +57,11 @@ const emit = defineEmits<{
 			<div class="card-body" v-if="!item.loading && item.data">
 				<CardAttack v-for="(attack, index) in item.data.attacks" :key="index" :attack="attack" />
 			</div>
+			
+			<CardFooter v-if="!item.loading && item.card">
+				<CardWeakness :type="item.data?.types[0]?.type.name" />
+				<CardRetreat :type="item.data?.types[0]?.type.name" />
+			</CardFooter>
 		</div>
 
 		<!-- Rarity icon -->
@@ -68,5 +76,6 @@ const emit = defineEmits<{
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
+	flex: 1;
 }
 </style>

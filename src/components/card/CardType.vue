@@ -34,6 +34,7 @@ const { iconStyle } = useEnergyIcon(type, { width: 20, height: 20 });
   top: 4px;
   right: 10px;
   display: flex;
+  text-shadow: none;
 }
 
 .type-icon {
