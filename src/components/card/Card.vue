@@ -3,6 +3,7 @@ import CardAttack from '@/components/card/CardAttack.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
+import CardType from '@/components/card/CardType.vue';
 import type { GeneratedCard } from '@/interface/GeneratedCard';
 
 const { index, item } = defineProps<{
@@ -37,7 +38,9 @@ const emit = defineEmits<{
 	>
 		<div class="card-inner">
 			<!-- Header -->
-			<CardHeader v-if="!item.loading && item.card" :name="item.card?.name" />
+			<CardHeader v-if="!item.loading && item.card" :name="item.card?.name">
+				<CardType :hp="item.data?.stats[0]?.base_stat" :type="item.data?.types[0]?.type.name" />
+			</CardHeader>
 
 			<!-- Image -->
 			<CardImage
@@ -60,4 +63,10 @@ const emit = defineEmits<{
 
 <style scoped>
 @import './Card.less';
+
+.card-body {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
 </style>

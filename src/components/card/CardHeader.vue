@@ -9,6 +9,7 @@ const { name } = defineProps<{
 		<p class="card-name">
 			{{ name || 'Loading…' }}
 		</p>
+		<slot />
 	</div>
 </template>
 
