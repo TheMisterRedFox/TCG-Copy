@@ -13,6 +13,7 @@ import { Card as CardModel } from '@/models/card';
 // ---------------------------------------------------------------
 // Data
 // ---------------------------------------------------------------
+const BOOSTER_LENGTH = 5;
 const typedPokemonList: PokemonJSON[] = pokemonList;
 const pokemonCards = typedPokemonList.map(
 	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
@@ -24,9 +25,13 @@ const generatedCards = ref<GeneratedCard[]>([]);
 const clickedIndices = ref<number[]>([]);
 
 // Index de la carte actuellement sélectionnée
-const selectedIndex = ref(-1);
+const selectedIndex = ref(0);
 
 const cutted = ref(false);
+
+const isPreviewing = ref(false);
+
+const allCardsClicked = ref(false);
 
 // ---------------------------------------------------------------
 // Helper functions
@@ -85,8 +90,10 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 					energy: ['colorless', 'colorless'],
 				},
 			],
+			stats: [{ base_stat: 180, stat: { name: 'hp' } }],
 		};
 	}
+
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
 	const data = await res.json();
@@ -118,13 +125,13 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 // ---------------------------------------------------------------
 const generateBooster = async (): Promise<void> => {
 	generatedCards.value = []; // clear old cards
-	const empty = Array.from({ length: 5 }, () => ({
+	const empty = Array.from({ length: BOOSTER_LENGTH }, () => ({
 		loading: true,
 		card: null,
 		data: null,
 	}));
 	generatedCards.value = empty;
-	for (let i = 0; i < 5; i++) {
+	for (let i = 0; i < BOOSTER_LENGTH; i++) {
 		const card = pickRandomCard();
 		const data = await fetchPokemonData(card.id);
 		generatedCards.value[i] = {
@@ -133,6 +140,10 @@ const generateBooster = async (): Promise<void> => {
 			data,
 		};
 	}
+
+	generatedCards.value = generatedCards.value.sort(
+		(a, b) => (a.card?.rarity ?? 0) - (b.card?.rarity ?? 0),
+	);
 };
 
 const cutBooster = (): void => {
@@ -144,20 +155,37 @@ const redoBooster = (): void => {
 	cutted.value = false;
 	clickedIndices.value = [];
 	selectedIndex.value = 0;
-	generateBooster();
+	allCardsClicked.value = false;
 };
 
 // ---------------------------------------------------------------
 // Keyboard navigation
 // ---------------------------------------------------------------
 const handleKeydown = (event: KeyboardEvent) => {
-	if (event.key === 'ArrowRight') {
+	if (event.key === 'ArrowRight' && cutted.value === true) {
 		if (selectedIndex.value < generatedCards.value.length) {
 			selectedIndex.value++;
 			if (!clickedIndices.value.includes(selectedIndex.value - 1)) {
 				clickedIndices.value.push(selectedIndex.value - 1);
 			}
+
+			if (selectedIndex.value === generatedCards.value.length) {
+				allCardsClicked.value = true;
+			}
 		}
+	}
+	if (
+		event.key === 'ArrowLeft' &&
+		cutted.value === true &&
+		selectedIndex.value < 4
+	) {
+		isPreviewing.value = true; // Activer le mode "preview"
+	}
+};
+
+const handleKeyup = (event: KeyboardEvent) => {
+	if (event.key === 'ArrowLeft') {
+		isPreviewing.value = false; // Désactiver le mode "preview"
 	}
 };
 
@@ -165,14 +193,20 @@ const onCardClicked = (index: number): void => {
 	if (!clickedIndices.value.includes(index)) {
 		clickedIndices.value.push(index);
 	}
+
+	if (index === BOOSTER_LENGTH - 1) {
+		allCardsClicked.value = true;
+	}
 };
 
 onMounted(() => {
 	window.addEventListener('keydown', handleKeydown);
+	window.addEventListener('keyup', handleKeyup);
 });
 
 onUnmounted(() => {
 	window.removeEventListener('keydown', handleKeydown);
+	window.removeEventListener('keyup', handleKeyup);
 });
 </script>
 
@@ -192,7 +226,7 @@ onUnmounted(() => {
 			</div>
 		</div>
 
-		<div class="cards-container">
+		<div class="cards-container" :class="{ preview: isPreviewing, allCardsClicked: allCardsClicked}">
 			<Card
 				v-for="(item, index) in generatedCards"
 				:key="index"
@@ -206,7 +240,9 @@ onUnmounted(() => {
 		</div>
 
 		<div class="controls">
-			<Button @click="redoBooster">Redo Booster</Button>
+			<Button v-if="allCardsClicked" @click="redoBooster" class="booster-button">
+				<img src="../../assets/img/booster-icon.png" alt="booster-icon">
+			</Button>
 		</div>
 	</div>
 </template>

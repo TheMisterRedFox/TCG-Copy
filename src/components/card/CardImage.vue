@@ -7,7 +7,6 @@ const { id, name, image } = defineProps<{
 </script>
 
 <template>
-	<!-- Card Image -->
 	<div class="card-illustration">
 		<img v-if="image" :src="image" :alt="name" />
 		<img
