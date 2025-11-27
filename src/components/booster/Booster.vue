@@ -108,26 +108,21 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 // Booster generation
 // ---------------------------------------------------------------
 const generateBooster = async (): Promise<void> => {
-	generatedCards.value = []; // clear old cards
-	const empty = Array.from({ length: BOOSTER_LENGTH }, () => ({
-		loading: true,
-		card: null,
-		data: null,
-	}));
-	generatedCards.value = empty;
+	const temp: GeneratedCard[] = [];
+	generatedCards.value = [];
 
 	for (let i = 0; i < BOOSTER_LENGTH; i++) {
 		const card = pickRandomCard();
 		const data = await fetchPokemonData(card.id);
 
-		generatedCards.value[i] = {
+		temp.push({
 			loading: false,
 			card,
 			data,
-		};
+		});
 	}
 
-	generatedCards.value = generatedCards.value.sort(
+	generatedCards.value = temp.sort(
 		(a, b) => (a.card?.rarity ?? 0) - (b.card?.rarity ?? 0),
 	);
 };
