@@ -63,4 +63,10 @@ const emit = defineEmits<{
 
 <style scoped>
 @import './Card.less';
+
+.card-body {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
 </style>

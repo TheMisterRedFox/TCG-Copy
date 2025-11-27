@@ -11,8 +11,8 @@ const iconStyle = computed(() => {
 	const transformedType = pokemonTypeTransform(attack.type || '').toLowerCase();
 
 	return {
-		width: '20px',
-		height: '20px',
+		width: '18px',
+		height: '18px',
 		border: '1px solid #ffff',
 		borderRadius: '25px',
 		backgroundSize: 'contain',
@@ -25,17 +25,13 @@ const iconStyle = computed(() => {
 <template>
 	<div class="attack" role="listitem">
 		<div class="attack-header">
-			<span :class="`type-${attack.type}`">
-				<i
-				class="type-icon"
-				:style="iconStyle"
-				></i>
-			</span>
+			<div class="attack-type-container" :class="`type-${attack.type}`">
+				<i class="type-icon" :style="iconStyle" />
+			</div>
 			<span class="attack-name">{{ attack.name }}</span> 
 		</div>
-		
 		<span>
-			{{ attack.power ?? '?' }} dmg
+			{{ attack.power ?? '0' }}
 		</span>
 	</div>
 </template>
@@ -45,10 +41,12 @@ const iconStyle = computed(() => {
 
 .attack {
 	display: flex;
+	justify-content: space-between;
 }
 
 .attack-header {
 	display: flex;
+	align-items: center;
 }
 
 .attack-name {
@@ -58,7 +56,10 @@ const iconStyle = computed(() => {
 
 .type-icon {
 	display: inline-block;
-	margin-right: 5px;
 	vertical-align: middle;
+}
+
+.attack-type-container {
+	width: 72px;
 }
 </style>
