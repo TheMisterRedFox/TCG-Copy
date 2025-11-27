@@ -7,7 +7,7 @@ const { type } = defineProps<{
 }>();
 
 const iconStyle = computed(() => {
-	const transformedType = pokemonTypeTransform(type || '').toLowerCase();
+	const transformedType = pokemonTypeTransform(type || '');
 
 	return {
 		width: '20px',
@@ -16,7 +16,7 @@ const iconStyle = computed(() => {
 		borderRadius: '25px',
 		backgroundSize: 'contain',
 		backgroundRepeat: 'no-repeat',
-		backgroundImage: `url('./img/energy/${transformedType}-energy.png')`,
+		backgroundImage: `url('/img/energy/${transformedType}-energy.png')`,
 	};
 });
 </script>

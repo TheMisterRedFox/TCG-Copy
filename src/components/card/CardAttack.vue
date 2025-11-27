@@ -3,12 +3,23 @@ import { computed } from 'vue';
 import type { Attack } from '@/interface/GeneralTypes';
 import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
 
+/**
+ * Props
+ * @property {Attack} attack - The attack data to display
+ */
 const { attack } = defineProps<{
 	attack: Attack;
 }>();
 
+/**
+ * Computes the inline style for the energy icon displayed next to the attack name
+ *
+ * - Calls `pokemonTypeTransform` to normalize the type (e.g. "Bird" → "normal")
+ * - Builds the final image URL from `/public/img/energy/...`
+ * - Ensures consistent size, border and rendering of the icon
+ */
 const iconStyle = computed(() => {
-	const transformedType = pokemonTypeTransform(attack.type || '').toLowerCase();
+	const transformedType = pokemonTypeTransform(attack.type || '');
 
 	return {
 		width: '18px',
@@ -17,7 +28,7 @@ const iconStyle = computed(() => {
 		borderRadius: '25px',
 		backgroundSize: 'contain',
 		backgroundRepeat: 'no-repeat',
-		backgroundImage: `url('./img/energy/${transformedType}-energy.png')`,
+		backgroundImage: `url('/img/energy/${transformedType}-energy.png')`,
 	};
 });
 </script>
@@ -25,14 +36,17 @@ const iconStyle = computed(() => {
 <template>
 	<div class="attack" role="listitem">
 		<div class="attack-header">
+			<!-- Attack type container -->
 			<div class="attack-type-container" :class="`type-${attack.type}`">
 				<i class="type-icon" :style="iconStyle" />
 			</div>
+
+			<!-- Attack name -->
 			<span class="attack-name">{{ attack.name }}</span> 
 		</div>
-		<span>
-			{{ attack.power ?? '0' }}
-		</span>
+
+		<!-- Attack power -->
+		<span>{{ attack.power ?? '0' }}</span>
 	</div>
 </template>
 
