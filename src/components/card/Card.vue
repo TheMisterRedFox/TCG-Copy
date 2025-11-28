@@ -6,11 +6,11 @@ import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
-import CardWeakness from '@/components/card/CardWeakness.vue';
 import type { CardV2 } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
 import CardAttackV2 from './CardAttackV2.vue';
+import CardWeaknessV2 from './CardWeaknessV2.vue';
 
 const { index, item } = defineProps<{
 	index: number;
@@ -72,7 +72,8 @@ onMounted(async () => {
 			</div>
 			
 			<CardFooter v-if="!item.loading && item.card">
-				<CardWeakness :type="item.data?.types[0]?.type.name" />
+				<!-- <CardWeakness :type="item.data?.types[0]?.type.name" /> -->
+				<CardWeaknessV2 v-for="(weakness, index) in baseCard?.weaknesses" :key="index" :weakness="weakness" />
 				<CardRetreat :type="item.data?.types[0]?.type.name" />
 			</CardFooter>
 		</div>
