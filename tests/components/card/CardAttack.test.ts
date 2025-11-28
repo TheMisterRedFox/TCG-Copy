@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import CardAttack from '@/components/card/CardAttack.vue';
-import type { Attack } from '@/interface/GeneralTypes';
+import type { Attack } from '@/interfaces/GeneralTypes';
 import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
 
 vi.mock('@/utils/pokemonTypeTransform', () => ({

@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import { useEnergyIcon } from '@/composables/useEnergyIcon';
-import type { Attack } from '@/interfaces/GeneralTypes';
+import type { AttackV2 } from '@/interfaces/GeneralTypes';
 
 /**
  * Props
  * @property {Attack} attack - The attack data to display
  */
 const { attack } = defineProps<{
-	attack: Attack;
+	attack: AttackV2;
 }>();
 
-const { iconStyle } = useEnergyIcon(attack.type, { width: 15, height: 15 });
+const attackCostEnergy = attack.cost.map((costType) => {
+	const { iconStyle } = useEnergyIcon(costType, { width: 15, height: 15 });
+	return iconStyle;
+});
 </script>
 
 <template>
 	<div class="attack" role="listitem">
 		<div class="attack-header">
 			<!-- Attack type container -->
-			<div class="attack-type-container" :class="`type-${attack.type}`">
-				<i class="type-icon" :style="iconStyle" v-for="energy in attack.energy" />
+			<div class="attack-type-container">
+				<i class="type-icon" v-for="(energy, i) in attackCostEnergy" :key="i" :style="energy.value" />
 			</div>
 
 			<!-- Attack name -->
@@ -26,7 +29,7 @@ const { iconStyle } = useEnergyIcon(attack.type, { width: 15, height: 15 });
 		</div>
 
 		<!-- Attack power -->
-		<span>{{ attack.power ?? '0' }}</span>
+		<span>{{ attack.damage }}</span>
 	</div>
 </template>
 
