@@ -7,10 +7,10 @@ import CardRarity from '@/components/card/CardRarity.vue';
 import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
 import CardWeakness from '@/components/card/CardWeakness.vue';
+import type { CardV2 } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
 import CardAttackV2 from './CardAttackV2.vue';
-import type { CardV2 } from '@/interfaces/GeneralTypes';
 
 const { index, item } = defineProps<{
 	index: number;
