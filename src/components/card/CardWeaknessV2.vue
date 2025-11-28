@@ -10,9 +10,6 @@ const { weakness } = defineProps<{
 	weakness?: WeaknessV2;
 }>();
 
-console.log(weakness);
-console.log(weakness?.type);
-
 const { iconStyle } = useEnergyIcon(weakness?.type, { width: 14, height: 14 });
 </script>
 
