@@ -32,7 +32,6 @@ export interface Stat {
  */
 
 export interface CardV2 {
-	category: string;
 	id: string;
 	image: string;
 	localId: string;
