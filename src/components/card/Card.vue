@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CardAttack from '@/components/card/CardAttack.vue';
+import { onMounted, ref } from 'vue';
 import CardFooter from '@/components/card/CardFooter.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
@@ -8,6 +8,9 @@ import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
 import CardWeakness from '@/components/card/CardWeakness.vue';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
+import { useTCGdexStore } from '@/stores/tcgdexStore';
+import CardAttackV2 from './CardAttackV2.vue';
+import type { CardV2 } from '@/interfaces/GeneralTypes';
 
 const { index, item } = defineProps<{
 	index: number;
@@ -20,6 +23,15 @@ const emit = defineEmits<{
 	(e: 'select', index: number): void;
 	(e: 'clickCard', index: number): void;
 }>();
+
+const tcgStore = useTCGdexStore();
+const baseCard = ref<CardV2 | null>(null);
+
+onMounted(async () => {
+	if (item.card?.name) {
+		baseCard.value = await tcgStore.getBaseSetCard(item.card.name);
+	}
+});
 </script>
 
 <template>
@@ -55,7 +67,8 @@ const emit = defineEmits<{
 
 			<!-- Body -->
 			<div class="card-body" v-if="!item.loading && item.data">
-				<CardAttack v-for="(attack, index) in item.data.attacks" :key="index" :attack="attack" />
+				<!-- <CardAttack v-for="(attack, index) in item.data.attacks" :key="index" :attack="attack" /> -->
+				<CardAttackV2 v-for="(attack, index) in baseCard?.attacks" :key="index" :attack="attack" />
 			</div>
 			
 			<CardFooter v-if="!item.loading && item.card">
