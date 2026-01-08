@@ -18,18 +18,25 @@ const attackCostEnergy = attack.cost.map((costType) => {
 
 <template>
 	<div class="attack" role="listitem">
-		<div class="attack-header">
-			<!-- Attack type container -->
-			<div class="attack-type-container">
-				<i class="type-icon" v-for="(energy, i) in attackCostEnergy" :key="i" :style="energy.value" />
+		<div class="attack-header-container">
+			<div class="attack-name-container">
+				<!-- Attack type container -->
+				<div class="attack-type-container">
+					<i class="type-icon" v-for="(energy, i) in attackCostEnergy" :key="i" :style="energy.value" />
+				</div>
+				
+				<!-- Attack name -->
+				<span class="attack-name">{{ attack.name }}</span>
 			</div>
 
-			<!-- Attack name -->
-			<span class="attack-name">{{ attack.name }}</span> 
+			<!-- Attack power -->
+			<span class="attack-damage">{{ attack.damage }}</span>
 		</div>
 
-		<!-- Attack power -->
-		<span>{{ attack.damage }}</span>
+		<div v-if="attack.effect" class="attack-effect-container">
+			<!-- Attack effect -->
+			<span class="attack-effect">{{ attack.effect }}</span>
+		</div>
 	</div>
 </template>
 
@@ -38,28 +45,42 @@ const attackCostEnergy = attack.cost.map((costType) => {
 
 .attack {
 	display: flex;
-	justify-content: space-between;
-}
+	flex-direction: column;
 
-.attack-header {
-	display: flex;
-	align-items: center;
-}
+	.attack-header-container {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
 
-.attack-name {
-	font-weight: bold;
-	text-transform: capitalize;
-}
+		.attack-name-container {
+			display: flex;
 
-.type-icon {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 1px;
-}
+			.attack-type-container {
+				width: 75px;
+				display: flex;
+				align-items: center;
 
-.attack-type-container {
-	width: 75px;
-	display: flex;
-	align-items: center;
+				.type-icon {
+					display: inline-block;
+					vertical-align: middle;
+					margin-right: 1px;
+				}
+			}
+
+			.attack-name {
+				font-weight: bold;
+				text-transform: capitalize;
+			}
+		}
+	}
+
+	.attack-effect-container {
+		margin-top: -5px;
+		
+		.attack-effect {
+			font-size: 0.8em;
+			font-weight: 200;
+		}
+	}
 }
 </style>
