@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useEnergyIcon } from '@/composables/useEnergyIcon';
-import type { WeaknessV2 } from '@/interfaces/GeneralTypes';
+import type { Weakness } from '@/interfaces/GeneralTypes';
 
 /**
  * Props
  * @property {string} type - The type of the card
  */
 const { weakness } = defineProps<{
-	weakness?: WeaknessV2;
+	weakness?: Weakness;
 }>();
 
 const { iconStyle } = useEnergyIcon(weakness?.type, { width: 14, height: 14 });

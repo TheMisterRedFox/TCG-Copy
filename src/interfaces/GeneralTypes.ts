@@ -13,25 +13,24 @@ export interface Move {
 	};
 }
 
-export interface Attack {
-	name: string;
-	type: string;
-	power: number | null;
-	energy: string[];
-}
-
 export interface Stat {
 	base_stat: number;
 	stat: { name: string };
 }
 
-/**
- * ------------------------------------
- * V2
- * ------------------------------------
- */
+export interface Attack {
+	cost: string[];
+	damage: number | null;
+	effect: string;
+	name: string;
+}
 
-export interface CardV2 {
+export interface Weakness {
+	type: string;
+	value: string;
+}
+
+export interface Card {
 	id: string;
 	image: string;
 	localId: string;
@@ -42,19 +41,7 @@ export interface CardV2 {
 	evolveFrom: string;
 	description: string;
 	stage: string;
-	attacks: AttackV2[];
-	weaknesses: WeaknessV2[];
+	attacks: Attack[];
+	weaknesses: Weakness[];
 	retreat: number;
-}
-
-export interface AttackV2 {
-	cost: string[];
-	damage: number | null;
-	effect: string;
-	name: string;
-}
-
-export interface WeaknessV2 {
-	type: string;
-	value: string;
 }

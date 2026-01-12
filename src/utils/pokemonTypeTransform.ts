@@ -5,7 +5,6 @@ import { OriginalPokemonTypesEnum } from '@/enums/pokemonTypesEnum';
  * to the closest OriginalPokemonTypesEnum equivalent.
  */
 const fallbackTypeMap: Record<string, OriginalPokemonTypesEnum> = {
-	// V1
 	bird: OriginalPokemonTypesEnum.NORMAL,
 	bug: OriginalPokemonTypesEnum.GRASS,
 	flying: OriginalPokemonTypesEnum.NORMAL,
@@ -15,7 +14,6 @@ const fallbackTypeMap: Record<string, OriginalPokemonTypesEnum> = {
 	poison: OriginalPokemonTypesEnum.PSYCHIC,
 	rock: OriginalPokemonTypesEnum.FIGHTING,
 	fairy: OriginalPokemonTypesEnum.PSYCHIC,
-	// V2
 	colorless: OriginalPokemonTypesEnum.NORMAL,
 	lightning: OriginalPokemonTypesEnum.ELECTRIC,
 };

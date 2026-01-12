@@ -6,7 +6,7 @@ import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
-import type { CardV2 } from '@/interfaces/GeneralTypes';
+import type { Card } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
 import CardAttack from './CardAttack.vue';
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 }>();
 
 const tcgStore = useTCGdexStore();
-const baseCard = ref<CardV2 | null>(null);
+const baseCard = ref<Card | null>(null);
 
 onMounted(async () => {
 	if (item.card?.name) {

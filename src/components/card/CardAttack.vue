@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useEnergyIcon } from '@/composables/useEnergyIcon';
-import type { AttackV2 } from '@/interfaces/GeneralTypes';
+import type { Attack } from '@/interfaces/GeneralTypes';
 
 /**
  * Props
  * @property {Attack} attack - The attack data to display
  */
 const { attack } = defineProps<{
-	attack: AttackV2;
+	attack: Attack;
 }>();
 
 const attackCostEnergy = attack.cost.map((costType) => {
