@@ -9,8 +9,8 @@ import CardType from '@/components/card/CardType.vue';
 import type { CardV2 } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
-import CardAttackV2 from './CardAttackV2.vue';
-import CardWeaknessV2 from './CardWeaknessV2.vue';
+import CardAttack from './CardAttack.vue';
+import CardWeakness from './CardWeakness.vue';
 
 const { index, item } = defineProps<{
 	index: number;
@@ -67,13 +67,11 @@ onMounted(async () => {
 
 			<!-- Body -->
 			<div class="card-body" v-if="!item.loading && item.data">
-				<!-- <CardAttack v-for="(attack, index) in item.data.attacks" :key="index" :attack="attack" /> -->
-				<CardAttackV2 v-for="(attack, index) in baseCard?.attacks" :key="index" :attack="attack" />
+				<CardAttack v-for="(attack, index) in baseCard?.attacks" :key="index" :attack="attack" />
 			</div>
 			
 			<CardFooter v-if="!item.loading && item.card">
-				<!-- <CardWeakness :type="item.data?.types[0]?.type.name" /> -->
-				<CardWeaknessV2 v-for="(weakness, index) in baseCard?.weaknesses" :key="index" :weakness="weakness" />
+				<CardWeakness v-for="(weakness, index) in baseCard?.weaknesses" :key="index" :weakness="weakness" />
 				<CardRetreat :type="item.data?.types[0]?.type.name" />
 			</CardFooter>
 		</div>
