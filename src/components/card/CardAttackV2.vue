@@ -35,7 +35,7 @@ const attackCostEnergy = attack.cost.map((costType) => {
 
 		<div v-if="attack.effect" class="attack-effect-container">
 			<!-- Attack effect -->
-			<span class="attack-effect">{{ attack.effect }}</span>
+			<p class="attack-effect">{{ attack.effect }}</p>
 		</div>
 	</div>
 </template>
@@ -73,13 +73,12 @@ const attackCostEnergy = attack.cost.map((costType) => {
 			}
 		}
 	}
-
-	.attack-effect-container {
-		margin-top: -5px;
-		
+	
+	.attack-effect-container {		
 		.attack-effect {
-			font-size: 0.8em;
+			font-size: 0.75em;
 			font-weight: 200;
+			font-style: italic;
 		}
 	}
 }
