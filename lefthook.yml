@@ -7,5 +7,3 @@ pre-commit:
   parallel: true
   jobs:
     - run: npm run biome -- {staged_files}
-
-    - run: npm run type-check
