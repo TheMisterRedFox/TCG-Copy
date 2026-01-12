@@ -21,7 +21,7 @@ export interface Stat {
 export interface Attack {
 	cost: string[];
 	damage: number | null;
-	effect: string;
+	effect: string | null;
 	name: string;
 }
 

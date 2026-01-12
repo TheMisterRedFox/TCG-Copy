@@ -11,9 +11,9 @@ vi.mock('@/utils/pokemonTypeTransform', () => ({
 describe('CardAttack.vue', () => {
 	const baseAttack: Attack = {
 		name: 'Flame Shot',
-		power: 50,
-		type: 'fire',
-		energy: ['e1', 'e2'],
+		damage: 50,
+		cost: ['e1', 'e2'],
+		effect: null,
 	};
 
 	it('renders attack name & power', () => {

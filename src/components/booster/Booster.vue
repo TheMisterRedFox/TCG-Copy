@@ -68,9 +68,9 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			attacks: [
 				{
 					name: 'Onion Throw',
-					type: 'ground',
-					power: 50,
-					energy: ['colorless', 'colorless'],
+					cost: ['ground'],
+					damage: 50,
+					effect: 'May cause the opponent to cry',
 				},
 			],
 			stats: [{ base_stat: 180, stat: { name: 'hp' } }],
