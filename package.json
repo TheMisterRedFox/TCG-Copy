@@ -33,7 +33,7 @@
 		"@vue/tsconfig": "^0.8.1",
 		"jsdom": "^27.4.0",
 		"lefthook": "^2.0.15",
-		"less": "^4.4.2",
+		"less": "^4.5.1",
 		"less-loader": "^12.3.0",
 		"npm-run-all2": "^8.0.4",
 		"typescript": "~5.9.0",
