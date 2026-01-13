@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import CardAttack from '@/components/card/CardAttack.vue';
+import CardBody from '@/components/card/CardBody.vue';
 import CardFooter from '@/components/card/CardFooter.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
+import CardWeakness from '@/components/card/CardWeakness.vue';
 import type { Card } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
-import CardAttack from '@/components/card/CardAttack.vue';
-import CardWeakness from '@/components/card/CardWeakness.vue';
-import CardBody from '@/components/card/CardBody.vue';
 
 const { index, item } = defineProps<{
 	index: number;

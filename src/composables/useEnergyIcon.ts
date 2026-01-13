@@ -1,4 +1,3 @@
-// src/composables/useEnergyIcon.ts
 import { computed } from 'vue';
 import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
 
