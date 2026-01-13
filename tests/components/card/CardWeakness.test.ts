@@ -15,7 +15,7 @@ describe('CardWeakness.vue', () => {
 			props: {
 				weakness: {
 					type: 'fire',
-					value: '×2',
+					value: 'x2',
 				},
 			},
 		});
