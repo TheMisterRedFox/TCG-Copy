@@ -9,8 +9,9 @@ import CardType from '@/components/card/CardType.vue';
 import type { Card } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
-import CardAttack from './CardAttack.vue';
-import CardWeakness from './CardWeakness.vue';
+import CardAttack from '@/components/card/CardAttack.vue';
+import CardWeakness from '@/components/card/CardWeakness.vue';
+import CardBody from '@/components/card/CardBody.vue';
 
 const { index, item } = defineProps<{
 	index: number;
@@ -66,10 +67,11 @@ onMounted(async () => {
 			/>
 
 			<!-- Body -->
-			<div class="card-body" v-if="!item.loading && item.data">
+			<CardBody v-if="!item.loading && item.card">
 				<CardAttack v-for="(attack, index) in baseCard?.attacks" :key="index" :attack="attack" />
-			</div>
+			</CardBody>
 			
+			<!-- Footer -->
 			<CardFooter v-if="!item.loading && item.card">
 				<CardWeakness v-for="(weakness, index) in baseCard?.weaknesses" :key="index" :weakness="weakness" />
 				<CardRetreat :type="item.data?.types[0]?.type.name" />
@@ -83,11 +85,4 @@ onMounted(async () => {
 
 <style scoped>
 @import './Card.less';
-
-.card-body {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	flex: 1;
-}
 </style>
