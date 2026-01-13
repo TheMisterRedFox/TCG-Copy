@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import { describe, expect, it, vi } from 'vitest';
 import CardAttack from '@/components/card/CardAttack.vue';
-import type { Attack } from '@/interface/GeneralTypes';
+import type { Attack } from '@/interfaces/GeneralTypes';
 import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
 
 vi.mock('@/utils/pokemonTypeTransform', () => ({
@@ -11,9 +11,9 @@ vi.mock('@/utils/pokemonTypeTransform', () => ({
 describe('CardAttack.vue', () => {
 	const baseAttack: Attack = {
 		name: 'Flame Shot',
-		power: 50,
-		type: 'fire',
-		energy: ['e1', 'e2'],
+		damage: 50,
+		cost: ['e1', 'e2'],
+		effect: null,
 	};
 
 	it('renders attack name & power', () => {

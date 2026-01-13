@@ -1,4 +1,4 @@
-import type { Card as CardType } from '@/interface/Card.ts';
+import type { Card as CardType } from '@/interfaces/Card.ts';
 
 export class Card implements CardType {
 	constructor(

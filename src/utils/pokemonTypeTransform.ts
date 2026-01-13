@@ -14,6 +14,8 @@ const fallbackTypeMap: Record<string, OriginalPokemonTypesEnum> = {
 	poison: OriginalPokemonTypesEnum.PSYCHIC,
 	rock: OriginalPokemonTypesEnum.FIGHTING,
 	fairy: OriginalPokemonTypesEnum.PSYCHIC,
+	colorless: OriginalPokemonTypesEnum.NORMAL,
+	lightning: OriginalPokemonTypesEnum.ELECTRIC,
 };
 
 /**

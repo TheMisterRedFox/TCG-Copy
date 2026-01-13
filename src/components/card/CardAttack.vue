@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useEnergyIcon } from '@/composables/useEnergyIcon';
-import type { Attack } from '@/interface/GeneralTypes';
+import type { Attack } from '@/interfaces/GeneralTypes';
 
 /**
  * Props
@@ -10,23 +10,33 @@ const { attack } = defineProps<{
 	attack: Attack;
 }>();
 
-const { iconStyle } = useEnergyIcon(attack.type, { width: 15, height: 15 });
+const attackCostEnergy = attack.cost.map((costType) => {
+	const { iconStyle } = useEnergyIcon(costType, { width: 15, height: 15 });
+	return iconStyle;
+});
 </script>
 
 <template>
 	<div class="attack" role="listitem">
-		<div class="attack-header">
-			<!-- Attack type container -->
-			<div class="attack-type-container" :class="`type-${attack.type}`">
-				<i class="type-icon" :style="iconStyle" v-for="energy in attack.energy" />
+		<div class="attack-header-container">
+			<div class="attack-name-container">
+				<!-- Attack type container -->
+				<div class="attack-type-container">
+					<i class="type-icon" v-for="(energy, i) in attackCostEnergy" :key="i" :style="energy.value" />
+				</div>
+				
+				<!-- Attack name -->
+				<span class="attack-name">{{ attack.name }}</span>
 			</div>
 
-			<!-- Attack name -->
-			<span class="attack-name">{{ attack.name }}</span> 
+			<!-- Attack power -->
+			<span class="attack-damage">{{ attack.damage }}</span>
 		</div>
 
-		<!-- Attack power -->
-		<span>{{ attack.power ?? '0' }}</span>
+		<div v-if="attack.effect" class="attack-effect-container">
+			<!-- Attack effect -->
+			<p class="attack-effect">{{ attack.effect }}</p>
+		</div>
 	</div>
 </template>
 
@@ -35,28 +45,41 @@ const { iconStyle } = useEnergyIcon(attack.type, { width: 15, height: 15 });
 
 .attack {
 	display: flex;
-	justify-content: space-between;
-}
+	flex-direction: column;
 
-.attack-header {
-	display: flex;
-	align-items: center;
-}
+	.attack-header-container {
+		display: flex;
+		justify-content: space-between;
+		width: 100%;
 
-.attack-name {
-	font-weight: bold;
-	text-transform: capitalize;
-}
+		.attack-name-container {
+			display: flex;
 
-.type-icon {
-	display: inline-block;
-	vertical-align: middle;
-	margin-right: 1px;
-}
+			.attack-type-container {
+				width: 75px;
+				display: flex;
+				align-items: center;
 
-.attack-type-container {
-	width: 75px;
-	display: flex;
-	align-items: center;
+				.type-icon {
+					display: inline-block;
+					vertical-align: middle;
+					margin-right: 1px;
+				}
+			}
+
+			.attack-name {
+				font-weight: bold;
+				text-transform: capitalize;
+			}
+		}
+	}
+	
+	.attack-effect-container {		
+		.attack-effect {
+			font-size: 0.75em;
+			font-weight: 200;
+			font-style: italic;
+		}
+	}
 }
 </style>
