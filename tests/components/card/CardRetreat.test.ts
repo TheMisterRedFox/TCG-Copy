@@ -9,7 +9,9 @@ vi.mock('@/utils/pokemonTypeTransform', () => ({
 
 describe('CardRetreat.vue', () => {
 	it('renders retreat label correctly', () => {
-		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue('colorless');
+		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue(
+			'colorless',
+		);
 
 		const wrapper = mount(CardRetreat, {
 			props: { type: 'colorless' },
@@ -28,7 +30,9 @@ describe('CardRetreat.vue', () => {
 	});
 
 	it('applies correct energy icon background image', () => {
-		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue('psychic');
+		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue(
+			'psychic',
+		);
 
 		const wrapper = mount(CardRetreat, {
 			props: { type: 'psychic' },
