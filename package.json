@@ -18,7 +18,7 @@
 		"biome": "biome check --write"
 	},
 	"dependencies": {
-		"@biomejs/biome": "2.3.6",
+		"@biomejs/biome": "2.3.11",
 		"@tcgdex/sdk": "^2.7.1",
 		"pinia": "^3.0.4",
 		"vue": "^3.5.22"
@@ -26,13 +26,13 @@
 	"devDependencies": {
 		"@tsconfig/node22": "^22.0.2",
 		"@types/jsdom": "^27.0.0",
-		"@types/node": "^22.18.11",
-		"@vitejs/plugin-vue": "^6.0.1",
+		"@types/node": "^25.0.7",
+		"@vitejs/plugin-vue": "^6.0.3",
 		"@vitest/coverage-v8": "^3.2.4",
 		"@vue/test-utils": "^2.4.6",
 		"@vue/tsconfig": "^0.8.1",
-		"jsdom": "^27.0.1",
-		"lefthook": "^2.0.4",
+		"jsdom": "^27.4.0",
+		"lefthook": "^2.0.15",
 		"less": "^4.4.2",
 		"less-loader": "^12.3.0",
 		"npm-run-all2": "^8.0.4",
@@ -40,6 +40,6 @@
 		"vite": "^7.1.11",
 		"vite-plugin-vue-devtools": "^8.0.3",
 		"vitest": "^3.2.4",
-		"vue-tsc": "^3.1.1"
+		"vue-tsc": "^3.2.2"
 	}
 }
