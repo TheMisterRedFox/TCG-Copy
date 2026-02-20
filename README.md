@@ -1,11 +1,11 @@
 <div align="center">
-# TCG-COPY
+<h1>TCG-COPY</h1>
 
 ![last-commit](https://img.shields.io/github/last-commit/TheMisterRedFox/TCG-Copy?style=flat&logo=git&logoColor=white&color=0080ff)
 ![repo-top-language](https://img.shields.io/github/languages/top/TheMisterRedFox/TCG-Copy?style=flat&color=0080ff)
 ![repo-language-count](https://img.shields.io/github/languages/count/TheMisterRedFox/TCG-Copy?style=flat&color=0080ff)
 
-*Built with the tools and technologies:*
+<em>Built with the tools and technologies</em>
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D.svg?style=flat&logo=vuedotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=flat&logo=TypeScript&logoColor=white)
@@ -16,6 +16,7 @@
 ![npm](https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white)
 ![Lefthook](https://img.shields.io/badge/Lefthook-FF1E1E.svg?style=flat&logo=Lefthook&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF.svg?style=flat&logo=GitHub-Actions&logoColor=white)
+
 </div>
 
 ---
@@ -55,11 +56,11 @@ Build TCG-Copy from the source and install dependencies:
 
 3. **Install the dependencies:**
 
-    Using npm:
+   Using npm:
 
-    ```sh
-    npm install
-    ```
+   ```sh
+   npm install
+   ```
 
 ### Usage
 
