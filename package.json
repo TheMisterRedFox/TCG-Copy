@@ -29,7 +29,7 @@
 		"@types/node": "^25.0.8",
 		"@vitejs/plugin-vue": "^6.0.3",
 		"@vitest/coverage-v8": "^4.0.17",
-		"@vue/test-utils": "^2.4.6",
+		"@vue/test-utils": "^2.2.7",
 		"@vue/tsconfig": "^0.8.1",
 		"jsdom": "^27.4.0",
 		"lefthook": "^2.0.15",
