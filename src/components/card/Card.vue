@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import CardAttack from '@/components/card/CardAttack.vue';
+import CardBody from '@/components/card/CardBody.vue';
 import CardFooter from '@/components/card/CardFooter.vue';
 import CardHeader from '@/components/card/CardHeader.vue';
 import CardImage from '@/components/card/CardImage.vue';
 import CardRarity from '@/components/card/CardRarity.vue';
 import CardRetreat from '@/components/card/CardRetreat.vue';
 import CardType from '@/components/card/CardType.vue';
+import CardWeakness from '@/components/card/CardWeakness.vue';
 import type { Card } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
-import CardAttack from './CardAttack.vue';
-import CardWeakness from './CardWeakness.vue';
 
 const { index, item } = defineProps<{
 	index: number;
@@ -41,7 +42,7 @@ onMounted(async () => {
 			clickedIndices.includes(index) ? 'clicked' : '',
 			item.card ? `rarity-${item.card?.rarity}` : '',
 			item.card && item.data?.types[0] ? `type-${item.data.types[0].type.name}` : '',
-            item.card ? `card-${item.card.id}` : '',
+			item.card ? `card-${item.card.id}` : '',
 			`index-${index}`,
 		]"
 		@click="
@@ -66,10 +67,11 @@ onMounted(async () => {
 			/>
 
 			<!-- Body -->
-			<div class="card-body" v-if="!item.loading && item.data">
+			<CardBody v-if="!item.loading && item.card">
 				<CardAttack v-for="(attack, index) in baseCard?.attacks" :key="index" :attack="attack" />
-			</div>
-			
+			</CardBody>
+
+			<!-- Footer -->
 			<CardFooter v-if="!item.loading && item.card">
 				<CardWeakness v-for="(weakness, index) in baseCard?.weaknesses" :key="index" :weakness="weakness" />
 				<CardRetreat :type="item.data?.types[0]?.type.name" />
@@ -83,11 +85,4 @@ onMounted(async () => {
 
 <style scoped>
 @import './Card.less';
-
-.card-body {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	flex: 1;
-}
 </style>

@@ -16,7 +16,7 @@ describe('CardAttack.vue', () => {
 		effect: null,
 	};
 
-	it('renders attack name & power', () => {
+	it('renders attack name and damage', () => {
 		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue('fire');
 
 		const wrapper = mount(CardAttack, {
@@ -27,7 +27,7 @@ describe('CardAttack.vue', () => {
 		expect(wrapper.text()).toContain('50');
 	});
 
-	it('renders one energy icon per attack.energy entry', () => {
+	it('renders one energy icon per attack cost entry', () => {
 		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue('fire');
 
 		const wrapper = mount(CardAttack, {
@@ -35,10 +35,10 @@ describe('CardAttack.vue', () => {
 		});
 
 		const icons = wrapper.findAll('.type-icon');
-		expect(icons.length).toBe(2);
+		expect(icons.length).toBe(baseAttack.cost.length);
 	});
 
-	it('applies correct background image', () => {
+	it('applies correct energy icon background image', () => {
 		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue('water');
 
 		const wrapper = mount(CardAttack, {
@@ -53,13 +53,28 @@ describe('CardAttack.vue', () => {
 		);
 	});
 
-	it('shows default power = 0 if power is null', () => {
+	it('renders attack effect when provided', () => {
 		(pokemonTypeTransform as ReturnType<typeof vi.fn>).mockReturnValue('fire');
 
 		const wrapper = mount(CardAttack, {
-			props: { attack: { ...baseAttack, power: null } },
+			props: {
+				attack: {
+					...baseAttack,
+					effect: 'Burn the opponent',
+				},
+			},
 		});
 
-		expect(wrapper.text()).toContain('0');
+		const effect = wrapper.find('.attack-effect');
+		expect(effect.exists()).toBe(true);
+		expect(effect.text()).toBe('Burn the opponent');
+	});
+
+	it('does not render effect container when effect is null', () => {
+		const wrapper = mount(CardAttack, {
+			props: { attack: baseAttack },
+		});
+
+		expect(wrapper.find('.attack-effect-container').exists()).toBe(false);
 	});
 });

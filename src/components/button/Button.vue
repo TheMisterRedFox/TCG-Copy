@@ -50,6 +50,5 @@ button {
 			color: #ffffff;
 		}
 	}
-	
 }
 </style>

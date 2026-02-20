@@ -24,7 +24,7 @@ const attackCostEnergy = attack.cost.map((costType) => {
 				<div class="attack-type-container">
 					<i class="type-icon" v-for="(energy, i) in attackCostEnergy" :key="i" :style="energy.value" />
 				</div>
-				
+
 				<!-- Attack name -->
 				<span class="attack-name">{{ attack.name }}</span>
 			</div>
@@ -73,8 +73,8 @@ const attackCostEnergy = attack.cost.map((costType) => {
 			}
 		}
 	}
-	
-	.attack-effect-container {		
+
+	.attack-effect-container {
 		.attack-effect {
 			font-size: 0.75em;
 			font-weight: 200;
