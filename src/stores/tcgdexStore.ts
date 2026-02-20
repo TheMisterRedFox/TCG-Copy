@@ -49,9 +49,7 @@ export const useTCGdexStore = defineStore('tcgdex', {
 				}
 
 				// Step 2: find Base Set version
-				const baseSetCard = cards.find((card: CardResumeModel) =>
-					card.id.includes('base'),
-				);
+				const baseSetCard = cards.find((card: CardResumeModel) => card.id.includes('base'));
 
 				if (!baseSetCard) {
 					this.baseSetMap[name] = null;

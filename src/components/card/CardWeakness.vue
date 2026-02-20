@@ -15,15 +15,13 @@ const { iconStyle } = useEnergyIcon(weakness?.type, { width: 14, height: 14 });
 
 <template>
 	<div class="card-metadata-container card-weakness">
-        <p class="card-weakness-label">
-            Weakness
-        </p>
-        <div class="card-weakness-type">
-            <i class="type-icon" :style="iconStyle" />
-            <span class="card-weakness-type-value">
-                {{ weakness?.value }}
-            </span>
-        </div>
+		<p class="card-weakness-label">Weakness</p>
+		<div class="card-weakness-type">
+			<i class="type-icon" :style="iconStyle" />
+			<span class="card-weakness-type-value">
+				{{ weakness?.value }}
+			</span>
+		</div>
 	</div>
 </template>
 
@@ -31,19 +29,19 @@ const { iconStyle } = useEnergyIcon(weakness?.type, { width: 14, height: 14 });
 @import '../card/Card.less';
 
 .card-weakness {
-    .card-weakness-label {
-        font-size: 10px;
-        font-weight: 700;
-    }
+	.card-weakness-label {
+		font-size: 10px;
+		font-weight: 700;
+	}
 
-    .card-weakness-type {
-        display: flex;
-        align-items: center;
+	.card-weakness-type {
+		display: flex;
+		align-items: center;
 
-        .card-weakness-type-value {
-            font-size: 14px;
-            font-weight: 800;
-        }
-    }
+		.card-weakness-type-value {
+			font-size: 14px;
+			font-weight: 800;
+		}
+	}
 }
 </style>

@@ -42,7 +42,7 @@ onMounted(async () => {
 			clickedIndices.includes(index) ? 'clicked' : '',
 			item.card ? `rarity-${item.card?.rarity}` : '',
 			item.card && item.data?.types[0] ? `type-${item.data.types[0].type.name}` : '',
-            item.card ? `card-${item.card.id}` : '',
+			item.card ? `card-${item.card.id}` : '',
 			`index-${index}`,
 		]"
 		@click="
@@ -70,7 +70,7 @@ onMounted(async () => {
 			<CardBody v-if="!item.loading && item.card">
 				<CardAttack v-for="(attack, index) in baseCard?.attacks" :key="index" :attack="attack" />
 			</CardBody>
-			
+
 			<!-- Footer -->
 			<CardFooter v-if="!item.loading && item.card">
 				<CardWeakness v-for="(weakness, index) in baseCard?.weaknesses" :key="index" :weakness="weakness" />

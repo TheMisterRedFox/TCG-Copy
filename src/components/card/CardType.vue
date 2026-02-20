@@ -15,15 +15,15 @@ const { iconStyle } = useEnergyIcon(type, { width: 20, height: 20 });
 </script>
 
 <template>
-  <div class="card-type">
-	<p class="hp">
-		<span>HP</span>
-		{{ hp ?? '0' }}
-	</p>
+	<div class="card-type">
+		<p class="hp">
+			<span>HP</span>
+			{{ hp ?? '0' }}
+		</p>
 
-	<!-- Type energy icon -->
-    <i class="type-icon" :style="iconStyle" />
-  </div>
+		<!-- Type energy icon -->
+		<i class="type-icon" :style="iconStyle" />
+	</div>
 </template>
 
 <style lang="less" scoped>

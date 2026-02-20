@@ -7,10 +7,7 @@ import { pokemonTypeTransform } from '@/utils/pokemonTypeTransform';
  * @param {object} size - Pixel size of the icon
  * @returns {{ iconStyle: ComputedRef<Record<string, string>> }}
  */
-export const useEnergyIcon = (
-	rawType: string | undefined,
-	size: { width: number; height: number },
-) => {
+export const useEnergyIcon = (rawType: string | undefined, size: { width: number; height: number }) => {
 	const iconStyle = computed(() => {
 		const transformed = pokemonTypeTransform(rawType || '');
 

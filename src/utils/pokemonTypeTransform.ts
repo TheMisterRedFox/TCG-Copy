@@ -23,17 +23,11 @@ const fallbackTypeMap: Record<string, OriginalPokemonTypesEnum> = {
  * @param {string} type - The Pokémon type to transform
  * @returns {OriginalPokemonTypesEnum} The normalized or mapped Pokémon type enum
  */
-export const pokemonTypeTransform = (
-	type: string,
-): OriginalPokemonTypesEnum => {
+export const pokemonTypeTransform = (type: string): OriginalPokemonTypesEnum => {
 	const lowerType = type.toLowerCase();
 
 	// If the type is already a valid OriginalPokemonTypesEnum, return it directly
-	if (
-		Object.values(OriginalPokemonTypesEnum).includes(
-			lowerType as OriginalPokemonTypesEnum,
-		)
-	) {
+	if (Object.values(OriginalPokemonTypesEnum).includes(lowerType as OriginalPokemonTypesEnum)) {
 		return lowerType as OriginalPokemonTypesEnum;
 	}
 
