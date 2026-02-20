@@ -33,6 +33,12 @@ describe('pokemonTypeTransform', () => {
 		expect(pokemonTypeTransform('fairy')).toBe(
 			OriginalPokemonTypesEnum.PSYCHIC,
 		);
+		expect(pokemonTypeTransform('colorless')).toBe(
+			OriginalPokemonTypesEnum.NORMAL,
+		);
+		expect(pokemonTypeTransform('lightning')).toBe(
+			OriginalPokemonTypesEnum.ELECTRIC,
+		);
 	});
 
 	it('should be case-insensitive', () => {

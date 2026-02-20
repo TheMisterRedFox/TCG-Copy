@@ -14,12 +14,10 @@ const { iconStyle } = useEnergyIcon(type, { width: 14, height: 14 });
 
 <template>
 	<div class="card-metadata-container card-retreat">
-        <p class="card-retreat-label">
-            Retreat
-        </p>
-        <span class="card-retreat-type">
-            <i class="type-icon" :style="iconStyle" />
-        </span>
+		<p class="card-retreat-label">Retreat</p>
+		<span class="card-retreat-type">
+			<i class="type-icon" :style="iconStyle" />
+		</span>
 	</div>
 </template>
 
@@ -27,14 +25,14 @@ const { iconStyle } = useEnergyIcon(type, { width: 14, height: 14 });
 @import '../card/Card.less';
 
 .card-retreat {
-    .card-retreat-label {
-        font-size: 10px;
-        font-weight: bold;
-    }
+	.card-retreat-label {
+		font-size: 10px;
+		font-weight: bold;
+	}
 
-    .card-retreat-type {
-        display: flex;
-        align-items: center;
-    }
+	.card-retreat-type {
+		display: flex;
+		align-items: center;
+	}
 }
 </style>
