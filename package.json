@@ -21,7 +21,7 @@
 		"@biomejs/biome": "2.4.4",
 		"@tcgdex/sdk": "^2.7.1",
 		"pinia": "^3.0.4",
-		"vue": "^3.5.28"
+		"vue": "^3.5.30"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "^22.0.2",
