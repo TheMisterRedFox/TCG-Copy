@@ -18,7 +18,7 @@
 		"biome": "biome check --write"
 	},
 	"dependencies": {
-		"@biomejs/biome": "2.4.4",
+		"@biomejs/biome": "2.4.6",
 		"@tcgdex/sdk": "^2.7.1",
 		"pinia": "^3.0.4",
 		"vue": "^3.5.30"
