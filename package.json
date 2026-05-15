@@ -31,7 +31,7 @@
 		"@vitest/coverage-v8": "^4.1.4",
 		"@vue/test-utils": "^2.4.9",
 		"@vue/tsconfig": "^0.9.1",
-		"jsdom": "^29.1.0",
+		"jsdom": "^29.1.1",
 		"lefthook": "^2.1.6",
 		"less": "^4.6.4",
 		"less-loader": "^12.3.2",
