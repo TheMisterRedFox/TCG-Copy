@@ -18,24 +18,24 @@
 		"biome": "biome check --write"
 	},
 	"dependencies": {
-		"@biomejs/biome": "2.4.15",
+		"@biomejs/biome": "2.5.0",
 		"@tcgdex/sdk": "^2.9.0",
 		"pinia": "^3.0.4",
-		"vue": "^3.5.34"
+		"vue": "^3.5.38"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "^22.0.2",
 		"@types/jsdom": "^28.0.3",
-		"@types/node": "^25.9.1",
-		"@vitejs/plugin-vue": "^6.0.6",
-		"@vitest/coverage-v8": "^4.1.4",
+		"@types/node": "^25.9.3",
+		"@vitejs/plugin-vue": "^6.0.7",
+		"@vitest/coverage-v8": "^4.1.8",
 		"@vue/test-utils": "^2.4.10",
 		"@vue/tsconfig": "^0.9.1",
 		"jsdom": "^29.1.1",
-		"lefthook": "^2.1.6",
-		"less": "^4.6.4",
-		"less-loader": "^12.3.2",
-		"npm-run-all2": "^8.0.4",
+		"lefthook": "^2.1.9",
+		"less": "^4.6.6",
+		"less-loader": "^13.0.0",
+		"npm-run-all2": "^9.0.2",
 		"typescript": "~6.0.3",
 		"vite": "^8.0.16",
 		"vite-plugin-vue-devtools": "^8.1.2",
