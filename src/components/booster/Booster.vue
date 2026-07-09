@@ -371,8 +371,8 @@ onUnmounted(() => {
 				:key="index"
 				:index="index"
 				:item="item"
-				:clickedIndices="clickedIndices"
-				:selectedIndex="selectedIndex"
+				:clicked-indices="clickedIndices"
+				:selected-index="selectedIndex"
 				@select="selectedIndex = $event"
 				@clickCard="onCardClicked"
 			/>
