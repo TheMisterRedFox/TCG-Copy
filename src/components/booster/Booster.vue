@@ -4,9 +4,12 @@ import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
 import Card from '@/components/card/Card.vue';
-import type { Attack, Move } from '@/interfaces/GeneralTypes';
+import type { Move } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
-import type { PokemonAPIData } from '@/interfaces/PokemonAPIData';
+import type {
+	PokemonAPIData,
+	PokemonMoveAttack,
+} from '@/interfaces/PokemonAPIData';
 import type { PokemonJSON } from '@/interfaces/PokemonJSON';
 import { Card as CardModel } from '@/models/card';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
@@ -79,9 +82,18 @@ const pickRandomCard = (): CardModel => {
 const POKEMON_CACHE_NAMESPACE = 'pokeapi-pokemon';
 const MOVE_CACHE_NAMESPACE = 'pokeapi-move';
 
+// The pokemon-by-id endpoint response, minus the fields we compute ourselves
+type RawPokemonResponse = Omit<PokemonAPIData, 'attacks' | 'custom_image'>;
+
+// The subset of the PokeAPI move-detail response we actually read
+interface PokeApiMoveDetail {
+	name: string;
+	power: number | null;
+	type: { name: string };
+}
+
 // Many Pokemon share moves (e.g. "tackle"); avoid re-fetching the same move URL
-// biome-ignore lint/suspicious/noExplicitAny: mirrors the untyped PokeAPI response shape used below
-const moveCache = new Map<string, any>();
+const moveCache = new Map<string, PokemonMoveAttack>();
 
 const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
@@ -96,9 +108,9 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			attacks: [
 				{
 					name: 'Onion Throw',
-					cost: ['ground'],
-					damage: 50,
-					effect: 'May cause the opponent to cry',
+					type: 'ground',
+					power: 50,
+					energy: ['⚡', '⚡'],
 				},
 			],
 			stats: [{ base_stat: 180, stat: { name: 'hp' } }],
@@ -113,26 +125,29 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
-	const data = await res.json();
+	const data = (await res.json()) as RawPokemonResponse;
 
 	// Pick first 2 moves for attacks
 	const moves = data.moves.slice(0, 2);
 
-	const attacks: Attack[] = await Promise.all(
+	const attacks: PokemonMoveAttack[] = await Promise.all(
 		moves.map(async (move: Move) => {
 			const memoized = moveCache.get(move.move.url);
 			if (memoized) return memoized;
 
-			const cached = getCached(MOVE_CACHE_NAMESPACE, move.move.url);
+			const cached = getCached<PokemonMoveAttack>(
+				MOVE_CACHE_NAMESPACE,
+				move.move.url,
+			);
 			if (cached) {
 				moveCache.set(move.move.url, cached);
 				return cached;
 			}
 
 			const moveRes = await fetch(move.move.url);
-			const moveData = await moveRes.json();
+			const moveData = (await moveRes.json()) as PokeApiMoveDetail;
 
-			const attack = {
+			const attack: PokemonMoveAttack = {
 				name: moveData.name,
 				type: moveData.type.name,
 				power: moveData.power,

@@ -10,7 +10,7 @@ const { attack } = defineProps<{
 	attack: Attack;
 }>();
 
-const attackCostEnergy = attack.cost.map((costType) => {
+const attackCostEnergy = (attack.cost ?? []).map((costType) => {
 	const { iconStyle } = useEnergyIcon(costType, { width: 15, height: 15 });
 	return iconStyle;
 });

@@ -1,4 +1,8 @@
-import TCGdex, { type CardResumeModel, Query } from '@tcgdex/sdk';
+import TCGdex, {
+	type CardResumeModel,
+	Query,
+	type Card as TCGdexCard,
+} from '@tcgdex/sdk';
 import { defineStore } from 'pinia';
 import { getCached, setCached } from '@/utils/persistentCache';
 
@@ -8,17 +12,17 @@ const BASE_SET_NAMESPACE = 'tcgdex-base-set-id';
 
 export const useTCGdexStore = defineStore('tcgdex', {
 	state: () => ({
-		cards: {} as Record<string, any>, // cache full cards
+		cards: {} as Record<string, TCGdexCard>, // cache full cards
 		baseSetMap: {} as Record<string, string | null>, // cache cardId for base set
 		loading: false,
 		error: null as string | null,
 	}),
 
 	actions: {
-		async getCard(id: string) {
+		async getCard(id: string): Promise<TCGdexCard | null> {
 			if (this.cards[id]) return this.cards[id];
 
-			const cached = getCached<unknown>(CARD_NAMESPACE, id);
+			const cached = getCached<TCGdexCard>(CARD_NAMESPACE, id);
 			if (cached) {
 				this.cards[id] = cached;
 				return cached;
@@ -29,6 +33,8 @@ export const useTCGdexStore = defineStore('tcgdex', {
 
 			try {
 				const card = await tcgdex.card.get(id);
+				if (!card) return null;
+
 				this.cards[id] = card;
 				setCached(CARD_NAMESPACE, id, card);
 				return card;

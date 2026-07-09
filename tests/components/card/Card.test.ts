@@ -27,11 +27,13 @@ const mountCard = (
 		clickedIndices: number[];
 		selectedIndex: number;
 	}> = {},
-	baseSetCard: BaseSetCard | null = null,
+	baseSetCard: Partial<BaseSetCard> | null = null,
 ) => {
 	const pinia = createPinia();
 	const tcgStore = useTCGdexStore(pinia);
-	vi.spyOn(tcgStore, 'getBaseSetCard').mockResolvedValue(baseSetCard);
+	vi.spyOn(tcgStore, 'getBaseSetCard').mockResolvedValue(
+		baseSetCard as BaseSetCard | null,
+	);
 
 	const wrapper = mount(Card, {
 		global: { plugins: [pinia] },
@@ -82,18 +84,10 @@ describe('Card.vue', () => {
 			{ index: 2 },
 			{
 				id: 'base1-4',
-				image: '',
 				localId: '4',
 				name: 'Charmander',
-				rarity: 'Common',
-				hp: 39,
-				types: ['Fire'],
-				evolveFrom: '',
-				description: '',
-				stage: '',
-				attacks: [{ name: 'Scratch', cost: [], damage: 10, effect: null }],
+				attacks: [{ name: 'Scratch', cost: [], damage: 10 }],
 				weaknesses: [{ type: 'water', value: '+20' }],
-				retreat: 1,
 			},
 		);
 		await flushPromises();

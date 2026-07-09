@@ -1,3 +1,5 @@
+import type { Card as TCGdexCard } from '@tcgdex/sdk';
+
 export interface Type {
 	type: { name: string };
 }
@@ -18,30 +20,11 @@ export interface Stat {
 	stat: { name: string };
 }
 
-export interface Attack {
-	cost: string[];
-	damage: number | null;
-	effect: string | null;
-	name: string;
-}
+/** A single attack as returned by the TCGdex API for a card. */
+export type Attack = NonNullable<TCGdexCard['attacks']>[number];
 
-export interface Weakness {
-	type: string;
-	value: string;
-}
+/** A single weakness as returned by the TCGdex API for a card. */
+export type Weakness = NonNullable<TCGdexCard['weaknesses']>[number];
 
-export interface Card {
-	id: string;
-	image: string;
-	localId: string;
-	name: string;
-	rarity: string;
-	hp: number;
-	types: string[];
-	evolveFrom: string;
-	description: string;
-	stage: string;
-	attacks: Attack[];
-	weaknesses: Weakness[];
-	retreat: number;
-}
+/** The full TCGdex card shape, re-exported so call sites don't import the SDK directly. */
+export type Card = TCGdexCard;
