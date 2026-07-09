@@ -1,7 +1,10 @@
 import TCGdex, { type CardResumeModel, Query } from '@tcgdex/sdk';
 import { defineStore } from 'pinia';
+import { getCached, setCached } from '@/utils/persistentCache';
 
 const tcgdex = new TCGdex('en');
+const CARD_NAMESPACE = 'tcgdex-card';
+const BASE_SET_NAMESPACE = 'tcgdex-base-set-id';
 
 export const useTCGdexStore = defineStore('tcgdex', {
 	state: () => ({
@@ -15,12 +18,19 @@ export const useTCGdexStore = defineStore('tcgdex', {
 		async getCard(id: string) {
 			if (this.cards[id]) return this.cards[id];
 
+			const cached = getCached<unknown>(CARD_NAMESPACE, id);
+			if (cached) {
+				this.cards[id] = cached;
+				return cached;
+			}
+
 			this.loading = true;
 			this.error = null;
 
 			try {
 				const card = await tcgdex.card.get(id);
 				this.cards[id] = card;
+				setCached(CARD_NAMESPACE, id, card);
 				return card;
 			} catch (e) {
 				this.error = String(e);
@@ -31,9 +41,16 @@ export const useTCGdexStore = defineStore('tcgdex', {
 		},
 
 		async getBaseSetCardId(name: string): Promise<string | null> {
-			// Use cache if available
+			// Use in-memory cache if available
 			if (this.baseSetMap[name] !== undefined) {
 				return this.baseSetMap[name];
+			}
+
+			// Fall back to the persistent cache (survives page reloads)
+			const cached = getCached<string | null>(BASE_SET_NAMESPACE, name);
+			if (cached !== undefined) {
+				this.baseSetMap[name] = cached;
+				return cached;
 			}
 
 			this.loading = true;
@@ -45,6 +62,7 @@ export const useTCGdexStore = defineStore('tcgdex', {
 
 				if (!cards.length) {
 					this.baseSetMap[name] = null;
+					setCached(BASE_SET_NAMESPACE, name, null);
 					return null;
 				}
 
@@ -55,10 +73,12 @@ export const useTCGdexStore = defineStore('tcgdex', {
 
 				if (!baseSetCard) {
 					this.baseSetMap[name] = null;
+					setCached(BASE_SET_NAMESPACE, name, null);
 					return null;
 				}
 
 				this.baseSetMap[name] = baseSetCard.id;
+				setCached(BASE_SET_NAMESPACE, name, baseSetCard.id);
 				return baseSetCard.id;
 			} catch (e) {
 				this.error = String(e);
