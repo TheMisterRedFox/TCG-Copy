@@ -13,7 +13,6 @@ describe('CardAttack.vue', () => {
 		name: 'Flame Shot',
 		damage: 50,
 		cost: ['e1', 'e2'],
-		effect: null,
 	};
 
 	it('renders attack name and damage', () => {
@@ -35,7 +34,7 @@ describe('CardAttack.vue', () => {
 		});
 
 		const icons = wrapper.findAll('.type-icon');
-		expect(icons.length).toBe(baseAttack.cost.length);
+		expect(icons.length).toBe(baseAttack.cost?.length);
 	});
 
 	it('applies correct energy icon background image', () => {
@@ -70,7 +69,7 @@ describe('CardAttack.vue', () => {
 		expect(effect.text()).toBe('Burn the opponent');
 	});
 
-	it('does not render effect container when effect is null', () => {
+	it('does not render effect container when no effect is provided', () => {
 		const wrapper = mount(CardAttack, {
 			props: { attack: baseAttack },
 		});

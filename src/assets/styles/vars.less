@@ -8,22 +8,25 @@
 @cut-line-border-height: 5px;
 @cut-line-border: @cut-line-border-height solid @cut-line-border-color;
 
-@booster-height: 585px;
-@booster-container-width: 300px;
+// Fluid on small viewports, capped at the original fixed desktop size
+@booster-height: clamp(430px, 78vh, 585px);
+@booster-container-width: clamp(220px, 80vw, 300px);
 @booster-top-border-height: 75px;
 @booster-bottom-border-height: 20px;
-@booster-uncutting-container-height: @booster-height - @booster-top-border-height - @booster-bottom-border-height - @cut-line-height - @cut-line-border-height*2;
+// Wrapped in calc() since @booster-height/@booster-container-width now contain
+// clamp(), which Less can't pre-compute — the browser resolves this at runtime.
+@booster-uncutting-container-height: calc(@booster-height - @booster-top-border-height - @booster-bottom-border-height - @cut-line-height - (@cut-line-border-height * 2));
 @booster-cover-box-shadow: inset 0px -10px 20px 0 #000000b3;
 
 @card-container-absolute-top-position: @booster-top-border-height + @cut-line-height + @cut-line-border-height*2;
-@card-height: @booster-uncutting-container-height - 45px;
-@card-width: @booster-container-width - 24px;
+@card-height: calc(@booster-uncutting-container-height - 45px);
+@card-width: calc(@booster-container-width - 24px);
 @card-border-radius: 12px;
 @card-default-background-color: #ffffff;
 @card-box-shadow: 0 0 5px @main-box-shadow-color;
 @card-default-border-color: #ffe167;
 @card-border-border-width: 12px;
-@card-illustration-height: 150px;
+@card-illustration-height: clamp(110px, 25vh, 150px);
 @card-illustration-border: 2px solid #c9c8c6;
 @card-illustration-background-color: #ffffff;
 

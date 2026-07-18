@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import ShrekImage from '@/assets/img/sticker-shrek.jpg';
 import pokemonList from '@/assets/pokemon.json';
 import Button from '@/components/button/Button.vue';
 import Card from '@/components/card/Card.vue';
-import type { Attack, Move } from '@/interfaces/GeneralTypes';
+import type { Move } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
-import type { PokemonAPIData } from '@/interfaces/PokemonAPIData';
+import type {
+	PokemonAPIData,
+	PokemonMoveAttack,
+} from '@/interfaces/PokemonAPIData';
 import type { PokemonJSON } from '@/interfaces/PokemonJSON';
 import { Card as CardModel } from '@/models/card';
+import { useTCGdexStore } from '@/stores/tcgdexStore';
+import { getCached, setCached } from '@/utils/persistentCache';
 
 // ---------------------------------------------------------------
 // Data
@@ -21,8 +26,21 @@ const pokemonCards = typedPokemonList.map(
 	(pokemon) => new CardModel(pokemon.id, pokemon.name, pokemon.rarity),
 );
 
+const cardsByRarity = new Map<number, CardModel[]>();
+for (const card of pokemonCards) {
+	const list = cardsByRarity.get(card.rarity);
+	if (list) list.push(card);
+	else cardsByRarity.set(card.rarity, [card]);
+}
+
+const tcgStore = useTCGdexStore();
+
 // Cards generated in the booster
 const generatedCards = ref<GeneratedCard[]>([]);
+
+// Set when a booster fails to generate (e.g. PokeAPI unreachable)
+const generationError = ref<string | null>(null);
+const errorMessage = computed(() => generationError.value || tcgStore.error);
 
 // Navigation and state tracking
 const clickedIndices = ref<number[]>([]);
@@ -48,13 +66,35 @@ const pickRandomCard = (): CardModel => {
 	else if (roll < 99.9) rarity = 4;
 	else rarity = 5;
 
-	const list = pokemonCards.filter((card) => card.rarity === rarity);
-	return list[getRandomInt(0, list.length - 1)]!;
+	// Rolled rarity tier may be empty; widen the search outward until one is found
+	for (let offset = 0; offset <= 5; offset++) {
+		const list =
+			cardsByRarity.get(rarity - offset) ?? cardsByRarity.get(rarity + offset);
+		if (list?.length) return list[getRandomInt(0, list.length - 1)]!;
+	}
+
+	throw new Error('No Pokemon cards available to generate a booster.');
 };
 
 // ---------------------------------------------------------------
 // API Fetch
 // ---------------------------------------------------------------
+const POKEMON_CACHE_NAMESPACE = 'pokeapi-pokemon';
+const MOVE_CACHE_NAMESPACE = 'pokeapi-move';
+
+// The pokemon-by-id endpoint response, minus the fields we compute ourselves
+type RawPokemonResponse = Omit<PokemonAPIData, 'attacks' | 'custom_image'>;
+
+// The subset of the PokeAPI move-detail response we actually read
+interface PokeApiMoveDetail {
+	name: string;
+	power: number | null;
+	type: { name: string };
+}
+
+// Many Pokemon share moves (e.g. "tackle"); avoid re-fetching the same move URL
+const moveCache = new Map<string, PokemonMoveAttack>();
+
 const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 	if (id === 0) {
 		return {
@@ -68,28 +108,46 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 			attacks: [
 				{
 					name: 'Onion Throw',
-					cost: ['ground'],
-					damage: 50,
-					effect: 'May cause the opponent to cry',
+					type: 'ground',
+					power: 50,
+					energy: ['⚡', '⚡'],
 				},
 			],
 			stats: [{ base_stat: 180, stat: { name: 'hp' } }],
 		};
 	}
 
+	const cachedPokemon = getCached<PokemonAPIData>(
+		POKEMON_CACHE_NAMESPACE,
+		String(id),
+	);
+	if (cachedPokemon) return cachedPokemon;
+
 	const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 	if (!res.ok) throw new Error('API error');
-	const data = await res.json();
+	const data = (await res.json()) as RawPokemonResponse;
 
 	// Pick first 2 moves for attacks
 	const moves = data.moves.slice(0, 2);
 
-	const attacks: Attack[] = await Promise.all(
+	const attacks: PokemonMoveAttack[] = await Promise.all(
 		moves.map(async (move: Move) => {
-			const moveRes = await fetch(move.move.url);
-			const moveData = await moveRes.json();
+			const memoized = moveCache.get(move.move.url);
+			if (memoized) return memoized;
 
-			return {
+			const cached = getCached<PokemonMoveAttack>(
+				MOVE_CACHE_NAMESPACE,
+				move.move.url,
+			);
+			if (cached) {
+				moveCache.set(move.move.url, cached);
+				return cached;
+			}
+
+			const moveRes = await fetch(move.move.url);
+			const moveData = (await moveRes.json()) as PokeApiMoveDetail;
+
+			const attack: PokemonMoveAttack = {
 				name: moveData.name,
 				type: moveData.type.name,
 				power: moveData.power,
@@ -98,32 +156,48 @@ const fetchPokemonData = async (id: number): Promise<PokemonAPIData> => {
 					() => '⚡',
 				),
 			};
+
+			moveCache.set(move.move.url, attack);
+			setCached(MOVE_CACHE_NAMESPACE, move.move.url, attack);
+			return attack;
 		}),
 	);
 
-	return { ...data, attacks };
+	const result = { ...data, attacks };
+	setCached(POKEMON_CACHE_NAMESPACE, String(id), result);
+	return result;
 };
 
 // ---------------------------------------------------------------
 // Booster generation
 // ---------------------------------------------------------------
 const generateBooster = async (): Promise<void> => {
-	const temp: GeneratedCard[] = [];
-	generatedCards.value = [];
+	generationError.value = null;
 
-	for (let i = 0; i < BOOSTER_LENGTH; i++) {
-		const card = pickRandomCard();
-		const data = await fetchPokemonData(card.id);
+	// Pick all 5 cards up front and fix their display order (by rarity), then
+	// fetch each one's data concurrently; each slot flips from loading to
+	// loaded independently as its own fetch resolves.
+	const cards = Array.from({ length: BOOSTER_LENGTH }, () =>
+		pickRandomCard(),
+	).sort((a, b) => a.rarity - b.rarity);
 
-		temp.push({
-			loading: false,
-			card,
-			data,
-		});
-	}
+	generatedCards.value = cards.map((card) => ({
+		loading: true,
+		card,
+		data: null,
+	}));
 
-	generatedCards.value = temp.sort(
-		(a, b) => (a.card?.rarity ?? 0) - (b.card?.rarity ?? 0),
+	await Promise.allSettled(
+		cards.map(async (card, i) => {
+			try {
+				const data = await fetchPokemonData(card.id);
+				generatedCards.value[i] = { loading: false, card, data };
+			} catch (e) {
+				generationError.value = 'Failed to generate booster. Please try again.';
+				console.error(e);
+				generatedCards.value[i] = { loading: false, card: null, data: null };
+			}
+		}),
 	);
 };
 
@@ -140,34 +214,31 @@ const redoBooster = (): void => {
 };
 
 // ---------------------------------------------------------------
-// Keyboard navigation
+// Shared reveal/peek logic, driven by keyboard, touch, and card clicks alike
 // ---------------------------------------------------------------
-const handleKeydown = (event: KeyboardEvent) => {
-	if (event.key === 'ArrowRight' && cutted.value === true) {
-		if (selectedIndex.value < generatedCards.value.length) {
-			selectedIndex.value++;
-			if (!clickedIndices.value.includes(selectedIndex.value - 1)) {
-				clickedIndices.value.push(selectedIndex.value - 1);
-			}
+const revealNextCard = (): void => {
+	if (cutted.value !== true) return;
 
-			if (selectedIndex.value === generatedCards.value.length) {
-				allCardsClicked.value = true;
-			}
+	if (selectedIndex.value < generatedCards.value.length) {
+		selectedIndex.value++;
+		if (!clickedIndices.value.includes(selectedIndex.value - 1)) {
+			clickedIndices.value.push(selectedIndex.value - 1);
+		}
+
+		if (selectedIndex.value === generatedCards.value.length) {
+			allCardsClicked.value = true;
 		}
 	}
-	if (
-		event.key === 'ArrowLeft' &&
-		cutted.value === true &&
-		selectedIndex.value < 4
-	) {
+};
+
+const startPreview = (): void => {
+	if (cutted.value === true && selectedIndex.value < 4) {
 		isPreviewing.value = true;
 	}
 };
 
-const handleKeyup = (event: KeyboardEvent) => {
-	if (event.key === 'ArrowLeft') {
-		isPreviewing.value = false;
-	}
+const endPreview = (): void => {
+	isPreviewing.value = false;
 };
 
 const onCardClicked = (index: number): void => {
@@ -180,14 +251,89 @@ const onCardClicked = (index: number): void => {
 	}
 };
 
+// ---------------------------------------------------------------
+// Keyboard navigation
+// ---------------------------------------------------------------
+const handleKeydown = (event: KeyboardEvent) => {
+	if (event.key === 'ArrowRight') {
+		revealNextCard();
+	}
+	if (event.key === 'ArrowLeft') {
+		startPreview();
+	}
+	if ((event.key === 'Enter' || event.key === ' ') && cutted.value === true) {
+		const target = event.target as HTMLElement;
+		const cardEl = target.closest<HTMLElement>('.card[data-index]');
+		if (cardEl) {
+			event.preventDefault();
+			const index = Number(cardEl.dataset.index);
+			selectedIndex.value = index;
+			onCardClicked(index);
+		}
+	}
+};
+
+const handleKeyup = (event: KeyboardEvent) => {
+	if (event.key === 'ArrowLeft') {
+		endPreview();
+	}
+};
+
+// ---------------------------------------------------------------
+// Touch navigation — swipe left advances/reveals, swipe right peeks
+// (mirrors ArrowRight/ArrowLeft since a swipe is a one-shot gesture,
+// not a hold, the peek auto-releases after a short delay)
+// ---------------------------------------------------------------
+const TOUCH_SWIPE_THRESHOLD = 40;
+let touchStartX = 0;
+let touchStartY = 0;
+let previewReleaseTimeout: ReturnType<typeof setTimeout> | undefined;
+
+const handleTouchStart = (event: TouchEvent) => {
+	const touch = event.touches[0];
+	if (!touch) return;
+	touchStartX = touch.clientX;
+	touchStartY = touch.clientY;
+};
+
+const handleTouchEnd = (event: TouchEvent) => {
+	if (cutted.value !== true) return;
+
+	const touch = event.changedTouches[0];
+	if (!touch) return;
+
+	const deltaX = touch.clientX - touchStartX;
+	const deltaY = touch.clientY - touchStartY;
+
+	if (
+		Math.abs(deltaX) < TOUCH_SWIPE_THRESHOLD ||
+		Math.abs(deltaX) < Math.abs(deltaY)
+	) {
+		return;
+	}
+
+	if (deltaX < 0) {
+		revealNextCard();
+	} else {
+		clearTimeout(previewReleaseTimeout);
+		startPreview();
+		previewReleaseTimeout = setTimeout(endPreview, 400);
+	}
+};
+
 onMounted(() => {
 	window.addEventListener('keydown', handleKeydown);
 	window.addEventListener('keyup', handleKeyup);
+	window.addEventListener('touchstart', handleTouchStart);
+	window.addEventListener('touchend', handleTouchEnd);
 });
 
 onUnmounted(() => {
 	window.removeEventListener('keydown', handleKeydown);
 	window.removeEventListener('keyup', handleKeyup);
+	window.removeEventListener('touchstart', handleTouchStart);
+	window.removeEventListener('touchend', handleTouchEnd);
+	clearTimeout(previewReleaseTimeout);
 });
 </script>
 
@@ -196,7 +342,15 @@ onUnmounted(() => {
 		<div class="booster-container shrek" :class="{ cutted }">
 			<div class="cut-container">
 				<div class="top-border"></div>
-				<div class="cut-line" @click="cutBooster"></div>
+				<div
+					class="cut-line"
+					role="button"
+					tabindex="0"
+					aria-label="Cut open booster pack"
+					@click="cutBooster"
+					@keydown.enter="cutBooster"
+					@keydown.space.prevent="cutBooster"
+				></div>
 			</div>
 			<div class="uncutting-container">
 				<div class="center-body">
@@ -207,17 +361,26 @@ onUnmounted(() => {
 			</div>
 		</div>
 
-		<div class="cards-container" :class="{ preview: isPreviewing, allCardsClicked: allCardsClicked}">
+		<div
+			class="cards-container"
+			:class="{ preview: isPreviewing, allCardsClicked: allCardsClicked}"
+			aria-live="polite"
+		>
 			<Card
 				v-for="(item, index) in generatedCards"
 				:key="index"
 				:index="index"
 				:item="item"
-				:clickedIndices="clickedIndices"
-				:selectedIndex="selectedIndex"
+				:clicked-indices="clickedIndices"
+				:selected-index="selectedIndex"
 				@select="selectedIndex = $event"
 				@clickCard="onCardClicked"
 			/>
+		</div>
+
+		<div v-if="errorMessage" class="generation-error" role="alert">
+			<p>{{ errorMessage }}</p>
+			<Button @click="generateBooster">Retry</Button>
 		</div>
 
 		<div class="controls">
@@ -237,5 +400,15 @@ onUnmounted(() => {
 	margin-top: 15px;
 	display: flex;
 	justify-content: center;
+}
+
+.generation-error {
+	margin-top: 15px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+	text-align: center;
+	color: #b00020;
 }
 </style>

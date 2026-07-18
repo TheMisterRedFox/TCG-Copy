@@ -119,6 +119,18 @@
             animation: throw-to-top-right 1s ease-in-out forwards;
         }
     }
+
+    // Keep the end state (booster thrown offscreen) but skip the motion itself
+    @media (prefers-reduced-motion: reduce) {
+        .booster-container.cutted {
+            animation-duration: 0.01s;
+            animation-delay: 0s;
+
+            .cut-container {
+                animation-duration: 0.01s;
+            }
+        }
+    }
 }
 
 .booster-button {

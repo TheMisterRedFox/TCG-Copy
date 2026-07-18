@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import CardAttack from '@/components/card/CardAttack.vue';
 import CardBody from '@/components/card/CardBody.vue';
 import CardFooter from '@/components/card/CardFooter.vue';
@@ -13,7 +13,7 @@ import type { Card } from '@/interfaces/GeneralTypes';
 import type { GeneratedCard } from '@/interfaces/GeneratedCard';
 import { useTCGdexStore } from '@/stores/tcgdexStore';
 
-const { index, item } = defineProps<{
+const { index, item, clickedIndices } = defineProps<{
 	index: number;
 	item: GeneratedCard;
 	clickedIndices: number[];
@@ -28,6 +28,14 @@ const emit = defineEmits<{
 const tcgStore = useTCGdexStore();
 const baseCard = ref<Card | null>(null);
 
+const ariaLabel = computed(() => {
+	if (item.loading) return `Card ${index + 1}, loading`;
+	if (!item.card) return `Card ${index + 1}, unavailable`;
+	return clickedIndices.includes(index)
+		? `${item.card.name}, revealed`
+		: `Card ${index + 1}, not yet revealed`;
+});
+
 onMounted(async () => {
 	if (item.card?.name) {
 		baseCard.value = await tcgStore.getBaseSetCard(item.card.name);
@@ -40,11 +48,17 @@ onMounted(async () => {
 		class="card"
 		:class="[
 			clickedIndices.includes(index) ? 'clicked' : '',
+			item.loading ? 'loading' : '',
 			item.card ? `rarity-${item.card?.rarity}` : '',
 			item.card && item.data?.types[0] ? `type-${item.data.types[0].type.name}` : '',
 			item.card ? `card-${item.card.id}` : '',
 			`index-${index}`,
 		]"
+		role="button"
+		tabindex="0"
+		:data-index="index"
+		:aria-label="ariaLabel"
+		:aria-busy="item.loading"
 		@click="
 			() => {
 				emit('select', index);
